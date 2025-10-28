@@ -18,7 +18,7 @@ A documentação do projeto foi dividida entre Documentação de Projeto e Docum
 
 Padrões não funcionais:
 
-O padrão adotado para o armazenamento dos dados dos usuários é baseado em Hashing Criptográfico. A senha é armazenada por meio de hashing, não em texto puro, diminuindo assim o risco de comprometimento em casos de acesso não autorizado ao banco de dados.
+O padrão não funcional adotado (de segurança) para fazer a autentiação do usuário através do login e assim armazenando os dados dos usuários, é baseado em Hashing Criptográfico. A senha é armazenada por meio de hashing, não em texto puro, diminuindo assim o risco de comprometimento em casos de acesso não autorizado ao banco de dados.
   
 Atividade e métricas de garantia:
 
