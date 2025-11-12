@@ -9,6 +9,7 @@ Anna: arrumar barra da primeira página + botões (código)
 Bianca: mudar os nomes dos arquivos e variáveis + comentários
 
 Gabrielle: melhorar documentação do git (pasta zip + readme)
+- Pasta zip arrumada em uma pasta para o código, na qual dentro dela se encontram todos os arquivos para conseguir compilar com sucesso o app.
 
 Semana 2:
 
