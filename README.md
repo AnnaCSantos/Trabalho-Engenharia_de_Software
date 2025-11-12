@@ -1,9 +1,11 @@
 # Trabalho-Engenharia_de_Software
 
-O trabalho está no arquivo "Entrega 2 - Engenharia de Software.pdf" 
+Na aula do dia 11/11, como osugerido pelo professor, fizemos uma separação do que precisa ser feito para a entrega final e atribuimos as responsabilidades a cada integrante da equipe
 
-Os slides e vídeo de funcionamento do trabalho está no arquivo "Projeto de Engenharia de Software.pdf"
+Semana 1:
 
-Caso não funcione o pdf do vídeo, aqui está o vídeo: https://www.canva.com/design/DAG3Cjq5uS0/FKJxY77FT_LK_GhNiLGLgA/edit?utm_content=DAG3Cjq5uS0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton 
+Anna: arrumar barra da primeira página + botões (código)
 
-Link do trabalho: https://docs.google.com/document/d/1reE7-K4kGq26VNUQfJvD6Bxtf9g2fxttxQFPhhh_0vg/edit?usp=sharing
+Bianca: mudar os nomes dos arquivos e variáveis + comentários
+
+Gabrielle: melhorar documentação do git (pasta zip + readme)
