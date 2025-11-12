@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>oa.png</file>
+        <file>of.png</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>imagens/1.png</file>
+        <file>imagens/2.png</file>
+        <file>imagens/3.jpg</file>
+        <file>imagens/4.jpg</file>
+        <file>imagens/5.jpg</file>
+        <file>imagens/6.jpg</file>
+        <file>imagens/7.jpg</file>
+        <file>imagens/8.jpg</file>
+        <file>imagens/9.jpg</file>
+        <file>imagens/logoo.png</file>
+        <file>imagens/Logo_1.png</file>
+        <file>imagens/inicio.png</file>
+        <file>imagens/grupos.png</file>
+        <file>imagens/forum.png</file>
+        <file>imagens/duvidas.png</file>
+        <file>imagens/agenda.png</file>
+        <file>imagens/fundo.png</file>
+        <file>imagens/fundo_2.png</file>
+        <file>imagens/perfil.png</file>
+    </qresource>
+</RCC>

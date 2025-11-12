@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CriarConta</class>
+ <widget class="QDialog" name="CriarConta">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>560</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-image: url(:/images/imagens/1.png);
+/* Este seletor funciona aqui, pois se aplica aos &quot;filhos&quot; da janela */
+QPushButton#criarcontaButton {
+    background-color: #F4B315; 
+    color: white;
+	font-weight: bold;
+    border: none; /* Sem borda */
+    border-radius: 5px;
+    padding: 5px;
+}
+
+QPushButton#criarcontaButton:hover {
+    background-color: #DDA010; /* Tom mais escuro */
+    border: none;
+}</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>30</y>
+     <width>521</width>
+     <height>501</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/images/imagens/2.png);
+border-radius: 20px;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>380</y>
+     <width>101</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+border: 1px solid;
+border-radius: 10px;
+</string>
+   </property>
+   <property name="text">
+    <string>Login</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="criarcontaButton">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>380</y>
+     <width>101</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+border: 1px solid;
+border-radius: 10px;
+
+</string>
+   </property>
+   <property name="text">
+    <string>Criar Conta</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="sobrenomeLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>91</x>
+     <y>198</y>
+     <width>171</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+border: 1px solid;
+border-radius: 5px;
+</string>
+   </property>
+   <property name="text">
+    <string>Nome</string>
+   </property>
+   <property name="dragEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+   <property name="clearButtonEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_5">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>200</y>
+     <width>161</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+border: 1px solid;
+border-radius: 5px;
+</string>
+   </property>
+   <property name="text">
+    <string>Sobrenome</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="senhaLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>91</x>
+     <y>239</y>
+     <width>411</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+border: 1px solid;
+border-radius: 5px;
+</string>
+   </property>
+   <property name="text">
+    <string>Usuário</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="emailLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>91</x>
+     <y>277</y>
+     <width>411</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+border: 1px solid;
+border-radius: 5px;
+</string>
+   </property>
+   <property name="text">
+    <string>E-mail</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_3">
+   <property name="geometry">
+    <rect>
+     <x>91</x>
+     <y>315</y>
+     <width>411</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+border: 1px solid;
+border-radius: 5px;
+</string>
+   </property>
+   <property name="text">
+    <string>Senha</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="atendentelabel_2">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>50</y>
+     <width>131</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radiums: 20px;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="icons.qrc">:/images/imagens/Logo_1.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
