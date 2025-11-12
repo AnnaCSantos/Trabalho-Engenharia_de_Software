@@ -1,6 +1,6 @@
 # Trabalho-Engenharia_de_Software
 
-Na aula do dia 11/11, como osugerido pelo professor, fizemos uma separação do que precisa ser feito para a entrega final e atribuimos as responsabilidades a cada integrante da equipe
+Na aula do dia 11/11, como sugerido pelo professor, fizemos uma separação do que precisa ser feito para a entrega final e atribuimos as responsabilidades a cada integrante da equipe
 
 Semana 1:
 
