@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>558</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="atendentelabel">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>150</y>
+      <width>291</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 20pt &quot;Noto Serif CJK KR&quot;;
+color: #FFFFFF;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>90</y>
+      <width>361</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 20pt &quot;Noto Serif CJK KR&quot;;
+color: #FFFFFF;</string>
+    </property>
+    <property name="text">
+     <string>Selecione uma opção</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="atendentelabel_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>-10</y>
+      <width>91</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radiums: 20px;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="icons.qrc">:/images/imagens/Logo_1.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="gerarRelatorioButton">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>350</y>
+      <width>121</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+/* Centraliza a imagem no botão */
+image: url(:/images/imagens/duvidas.png);
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: #0f1011;
+
+    width: 150px; 
+    height: 40px; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    
+   </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="forumButton">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>350</y>
+      <width>121</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+/* Centraliza a imagem no botão */
+image: url(:/images/imagens/forum.png);
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: #0f1011;
+
+    width: 150px; 
+    height: 40px; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    
+   </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="grupoButton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>200</y>
+      <width>121</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;grupo&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>2</number>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+/* Centraliza a imagem no botão */
+image: url(:/images/imagens/grupos.png);
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: #0f1011;
+
+    width: 150px; 
+    height: 40px; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    
+   </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="realizarReservaButton">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>200</y>
+      <width>111</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/images/imagens/agenda.png);
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: #0f1011;
+
+    width: 150px; 
+    height: 40px; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    
+   </string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sairButton">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>160</y>
+      <width>94</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-bottom-color: rgb(0, 0, 0);
+font: 10pt &quot;Liberation Serif&quot;;</string>
+    </property>
+    <property name="text">
+     <string>sair</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>60</y>
+      <width>891</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 20pt &quot;Noto Serif CJK KR&quot;;
+color: #FFFFFF;</string>
+    </property>
+    <property name="text">
+     <string>____________________________________________________________________________________________________________________________________________________________________________</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-20</y>
+      <width>971</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #0f1011;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_login">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>30</y>
+      <width>571</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(236, 236, 236);</string>
+    </property>
+    <property name="placeholderText">
+     <string>🔍</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>290</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#0f1011;
+border-radius:20px;
+font: 600 12pt &quot;Palatino Linotype&quot;;
+color: #FFFFFF;
+qproperty-alignment: 'AlignCenter';
+font-weight: bold;
+</string>
+    </property>
+    <property name="text">
+     <string>Grupo de estudo</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>450</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#0f1011;
+border-radius:20px;
+font: 600 12pt &quot;Palatino Linotype&quot;;
+color: #FFFFFF;
+qproperty-alignment: 'AlignCenter';
+font-weight: bold;
+</string>
+    </property>
+    <property name="text">
+     <string>Dúvidas</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>450</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#0f1011;
+border-radius:20px;
+font: 600 12pt &quot;Palatino Linotype&quot;;
+color: #FFFFFF;
+qproperty-alignment: 'AlignCenter';
+font-weight: bold;
+</string>
+    </property>
+    <property name="text">
+     <string>Central de Dúvidas</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="atendentelabel_3">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>23</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radiums: 50px;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="icons.qrc">:/images/imagens/inicio.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>-320</x>
+      <y>30</y>
+      <width>1201</width>
+      <height>611</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/images/imagens/fundo_2.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>290</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#0f1011;
+border-radius:20px;
+font: 600 12pt &quot;Palatino Linotype&quot;;
+qproperty-alignment: 'AlignCenter';
+color: #FFFFFF;
+font-weight: bold;
+</string>
+    </property>
+    <property name="text">
+     <string>Agenda Acadêmica</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>120</y>
+      <width>891</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 20pt &quot;Noto Serif CJK KR&quot;;
+color: #FFFFFF;</string>
+    </property>
+    <property name="text">
+     <string>____________________________________________________________________________________________________________________________________________________________________________</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="atendentelabel_4">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>23</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radiums: 50px;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="icons.qrc">:/images/imagens/perfil.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <zorder>label_9</zorder>
+   <zorder>atendentelabel</zorder>
+   <zorder>label</zorder>
+   <zorder>gerarRelatorioButton</zorder>
+   <zorder>forumButton</zorder>
+   <zorder>grupoButton</zorder>
+   <zorder>realizarReservaButton</zorder>
+   <zorder>sairButton</zorder>
+   <zorder>label_2</zorder>
+   <zorder>label_4</zorder>
+   <zorder>line_login</zorder>
+   <zorder>label_5</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_7</zorder>
+   <zorder>atendentelabel_2</zorder>
+   <zorder>atendentelabel_3</zorder>
+   <zorder>label_10</zorder>
+   <zorder>label_3</zorder>
+   <zorder>atendentelabel_4</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
