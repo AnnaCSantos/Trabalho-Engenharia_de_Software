@@ -9,3 +9,19 @@ Anna: arrumar barra da primeira página + botões (código)
 Bianca: mudar os nomes dos arquivos e variáveis + comentários
 
 Gabrielle: melhorar documentação do git (pasta zip + readme)
+
+Semana 2:
+
+Anna: revisar os padrões de projeto, montar a janela do perfil (código)
+
+Bianca: montar a central de dúvidas + banco de dados (código)
+
+Gabrielle: montar a agenda (código)
+
+Semana 3: 
+
+Anna: refatoração do código
+
+Bianca: adicionar diagramas + dúvidas (código)
+
+Gabrielle: montar a janela de grupo de estudos (código)
