@@ -26,10 +26,10 @@ class MainWindow : public QMainWindow
 
     private slots:
         //Slots pra cada janela diferente e o sair
-        void on_forumButton_clicked();
-        void on_realizarReservaButton_clicked();
+        void on_agendaButton_clicked();
+        void on_centralDuvidasButton_clicked();
         void on_grupoButton_clicked();
-        void on_gerarRelatorioButton_clicked();
+        void on_duvidasButton_clicked();
         void on_sairButton_clicked();
 
     private:
