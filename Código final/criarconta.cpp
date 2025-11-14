@@ -15,7 +15,7 @@ CriarConta::CriarConta(QWidget *parent)
     , ui(new Ui::CriarConta)
 {
     ui->setupUi(this);
-    setWindowTitle("Rede Paradise Hotéis - Criar Conta");
+    setWindowTitle("EducaUTFPR - Criar Conta");
 
     // Conecta ao banco de dados
     if(QSqlDatabase::contains("qt_sql_default_connection")) {
@@ -40,35 +40,35 @@ CriarConta::CriarConta(QWidget *parent)
     }
 
     // Limpa os placeholders padrão
+    ui->nomeLineEdit->clear();
     ui->sobrenomeLineEdit->clear();
-    ui->lineEdit_5->clear();
-    ui->senhaLineEdit->clear();
+    ui->usuarioLineEdit->clear();
     ui->emailLineEdit->clear();
-    ui->lineEdit_3->clear();
+    ui->senhaLineEdit->clear();
 
     // Define placeholders mais claros
-    ui->sobrenomeLineEdit->setPlaceholderText("Nome");
-    ui->lineEdit_5->setPlaceholderText("Sobrenome");
-    ui->senhaLineEdit->setPlaceholderText("Usuário");
+    ui->nomeLineEdit->setPlaceholderText("Nome");
+    ui->sobrenomeLineEdit->setPlaceholderText("Sobrenome");
+    ui->usuarioLineEdit->setPlaceholderText("Usuário");
     ui->emailLineEdit->setPlaceholderText("E-mail");
-    ui->lineEdit_3->setPlaceholderText("Senha");
+    ui->senhaLineEdit->setPlaceholderText("Senha");
 
     // Define o campo senha como password (oculta os caracteres)
-    ui->lineEdit_3->setEchoMode(QLineEdit::Password);
+    ui->senhaLineEdit->setEchoMode(QLineEdit::Password);
 
     // ============================================
     // CONFIGURA ENTER PARA NAVEGAR ENTRE CAMPOS
     // ============================================
-    connect(ui->sobrenomeLineEdit, &QLineEdit::returnPressed, ui->lineEdit_5,
+    connect(ui->nomeLineEdit, &QLineEdit::returnPressed, ui->sobrenomeLineEdit,
             static_cast<void (QLineEdit::*)()>(&QLineEdit::setFocus));
-    connect(ui->lineEdit_5, &QLineEdit::returnPressed, ui->senhaLineEdit,
+    connect(ui->sobrenomeLineEdit, &QLineEdit::returnPressed, ui->usuarioLineEdit,
             static_cast<void (QLineEdit::*)()>(&QLineEdit::setFocus));
-    connect(ui->senhaLineEdit, &QLineEdit::returnPressed, ui->emailLineEdit,
+    connect(ui->usuarioLineEdit, &QLineEdit::returnPressed, ui->emailLineEdit,
             static_cast<void (QLineEdit::*)()>(&QLineEdit::setFocus));
-    connect(ui->emailLineEdit, &QLineEdit::returnPressed, ui->lineEdit_3,
+    connect(ui->emailLineEdit, &QLineEdit::returnPressed, ui->senhaLineEdit,
             static_cast<void (QLineEdit::*)()>(&QLineEdit::setFocus));
     // Quando apertar Enter no campo de senha, cria a conta
-    connect(ui->lineEdit_3, &QLineEdit::returnPressed, this, &CriarConta::on_criarcontaButton_clicked);
+    connect(ui->senhaLineEdit, &QLineEdit::returnPressed, this, &CriarConta::on_criarcontaButton_clicked);
     // ============================================
 }
 
@@ -94,11 +94,11 @@ void CriarConta::on_criarcontaButton_clicked()
     }
 
     // Pega os valores dos campos
-    QString nome = ui->sobrenomeLineEdit->text().trimmed();
-    QString sobrenome = ui->lineEdit_5->text().trimmed();
-    QString usuario = ui->senhaLineEdit->text().trimmed();
+    QString nome = ui->nomeLineEdit->text().trimmed();
+    QString sobrenome = ui->sobrenomeLineEdit->text().trimmed();
+    QString usuario = ui->usuarioLineEdit->text().trimmed();
     QString email = ui->emailLineEdit->text().trimmed();
-    QString senha = ui->lineEdit_3->text().trimmed();
+    QString senha = ui->senhaLineEdit->text().trimmed();
 
     qDebug() << "Nome:" << nome;
     qDebug() << "Sobrenome:" << sobrenome;
@@ -109,7 +109,7 @@ void CriarConta::on_criarcontaButton_clicked()
     if(usuarioJaExiste(usuario)) {
         QMessageBox::warning(this, "Usuário já existe",
                              "Este nome de usuário já está cadastrado!\nEscolha outro nome de usuário.");
-        ui->senhaLineEdit->setFocus();
+        ui->usuarioLineEdit->setFocus();
         return;
     }
 
@@ -165,28 +165,28 @@ void CriarConta::on_pushButton_2_clicked()
 // Valida se os campos estão preenchidos
 bool CriarConta::validarCampos()
 {
-    QString nome = ui->sobrenomeLineEdit->text().trimmed();
-    QString sobrenome = ui->lineEdit_5->text().trimmed();
-    QString usuario = ui->senhaLineEdit->text().trimmed();
+    QString nome = ui->nomeLineEdit->text().trimmed();
+    QString sobrenome = ui->sobrenomeLineEdit->text().trimmed();
+    QString usuario = ui->usuarioLineEdit->text().trimmed();
     QString email = ui->emailLineEdit->text().trimmed();
-    QString senha = ui->lineEdit_3->text().trimmed();
+    QString senha = ui->senhaLineEdit->text().trimmed();
 
     // Verifica campos vazios
     if(nome.isEmpty()) {
         QMessageBox::warning(this, "Campo vazio", "Por favor, preencha o Nome!");
-        ui->sobrenomeLineEdit->setFocus();
+        ui->nomeLineEdit->setFocus();
         return false;
     }
 
     if(sobrenome.isEmpty()) {
         QMessageBox::warning(this, "Campo vazio", "Por favor, preencha o Sobrenome!");
-        ui->lineEdit_5->setFocus();
+        ui->sobrenomeLineEdit->setFocus();
         return false;
     }
 
     if(usuario.isEmpty()) {
         QMessageBox::warning(this, "Campo vazio", "Por favor, preencha o Usuário!");
-        ui->senhaLineEdit->setFocus();
+        ui->usuarioLineEdit->setFocus();
         return false;
     }
 
@@ -198,7 +198,7 @@ bool CriarConta::validarCampos()
 
     if(senha.isEmpty()) {
         QMessageBox::warning(this, "Campo vazio", "Por favor, preencha a Senha!");
-        ui->lineEdit_3->setFocus();
+        ui->senhaLineEdit->setFocus();
         return false;
     }
 
@@ -206,7 +206,7 @@ bool CriarConta::validarCampos()
     if(senha.length() < 6) {
         QMessageBox::warning(this, "Senha fraca",
                              "A senha deve ter no mínimo 6 caracteres!");
-        ui->lineEdit_3->setFocus();
+        ui->senhaLineEdit->setFocus();
         return false;
     }
 
