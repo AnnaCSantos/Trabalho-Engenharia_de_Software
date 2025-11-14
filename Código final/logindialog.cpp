@@ -17,7 +17,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     , ui(new Ui::LoginDialog)
 {
     ui->setupUi(this);
-    setWindowTitle("Rede Paradise Hotéis - Login");
+    setWindowTitle("EducaUTFPR - Login");
     this->setStyleSheet("QDialog {background-color: #F8F8F8;}");
 
     // Verifica se já existe uma conexão antes de criar
@@ -146,7 +146,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     ui->line_senha->setEchoMode(QLineEdit::Password);
 
     // Quando apertar Enter no campo de login, vai para o campo de senha
-    connect(ui->line_login, &QLineEdit::returnPressed, ui->line_senha,
+    connect(ui->line_usuario, &QLineEdit::returnPressed, ui->line_senha,
             static_cast<void (QLineEdit::*)()>(&QLineEdit::setFocus));
 
     // Quando apertar Enter no campo de senha, faz o login
@@ -168,9 +168,9 @@ void LoginDialog::on_criarconta_clicked(){
     telaDeCadastro.exec(); // O código para aqui até a telaDeCadastro fechar
 
     // Limpa os campos de login para o novo usuário digitar
-    ui->line_login->clear();
+    ui->line_usuario->clear();
     ui->line_senha->clear();
-    ui->line_login->setFocus();
+    ui->line_usuario->setFocus();
 }
 
 void LoginDialog::on_entrarButton_clicked()
@@ -182,7 +182,7 @@ void LoginDialog::on_entrarButton_clicked()
         return;
     }
 
-    QString username = ui->line_login->text().trimmed();
+    QString username = ui->line_usuario->text().trimmed();
     QString password = ui->line_senha->text().trimmed();
 
     // Validação básica
@@ -264,6 +264,6 @@ void LoginDialog::on_entrarButton_clicked()
         QMessageBox::warning(this, "Login Inválido",
                              "Usuário ou senha incorretos.\nTente novamente.");
         ui->line_senha->clear();
-        ui->line_login->setFocus();
+        ui->line_usuario->setFocus();
     }
 }
