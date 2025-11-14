@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Sistema_paradisee VERSION 0.1 LANGUAGES CXX)
+project(Sistema_EducaUTFPR VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -54,7 +54,7 @@ set(PROJECT_SOURCES
 #    Isso usa o comando qt_add_executable no Qt 6
 #    e o add_executable padrão no Qt 5
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(Sistema_paradisee
+    qt_add_executable(Sistema_EducaUTFPR
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         logindialog.h logindialog.cpp logindialog.ui
@@ -71,11 +71,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     # Lógica para Qt 5 (ou Android com Qt 5)
     if(ANDROID)
-        add_library(Sistema_paradisee SHARED
+        add_library(Sistema_EducaUTFPR SHARED
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(Sistema_paradisee
+        add_executable(Sistema_EducaUTFPR
             ${PROJECT_SOURCES}
             logindialog.h logindialog.cpp logindialog.ui
             consultardisponibilidadedialog.h consultardisponibilidadedialog.cpp consultardisponibilidadedialog.ui
@@ -89,7 +89,7 @@ endif()
 
 # 4. Linka as bibliotecas usando os "alias" genéricos
 #    O CMake vai linkar com Qt6::Widgets ou Qt5::Widgets automaticamente
-target_link_libraries(Sistema_paradisee PRIVATE
+target_link_libraries(Sistema_EducaUTFPR PRIVATE
     Qt::Widgets
     Qt::Sql
 )
@@ -97,10 +97,10 @@ target_link_libraries(Sistema_paradisee PRIVATE
 # 5. O if para o Bundle ID (identificador do app)
 #    Agora ${QT_VERSION} vai funcionar porque o find_package(QT...) a definiu
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Sistema_paradisee)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Sistema_EducaUTFPR)
 endif()
 
-set_target_properties(Sistema_paradisee PROPERTIES
+set_target_properties(Sistema_EducaUTFPR PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -109,7 +109,7 @@ set_target_properties(Sistema_paradisee PROPERTIES
 )
 
 include(GNUInstallDirs)
-install(TARGETS Sistema_paradisee
+install(TARGETS Sistema_EducaUTFPR
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -117,5 +117,5 @@ install(TARGETS Sistema_paradisee
 
 # 6. O if para finalizar o executável (apenas Qt 6)
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(Sistema_paradisee)
+    qt_finalize_executable(Sistema_EducaUTFPR)
 endif()
