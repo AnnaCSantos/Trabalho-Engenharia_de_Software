@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     gerenciador(Gerenciador_Reservas::getInstance())
 {
     ui->setupUi(this);
-    setWindowTitle("Rede Paradise Hotéis - Sistema de Reserva");
+    setWindowTitle("EducaUTFPR - Home");
 
 
     hide();
@@ -35,13 +35,13 @@ void MainWindow::setLoggedInUser(const QString& username)
     ui->atendentelabel->setText("Bem-vindo, " + username + "!");
 }
 
-void MainWindow::on_forumButton_clicked()
+void MainWindow::on_centralDuvidasButton_clicked()
 {
     ForumDialog dialog(this);
     dialog.exec();
 }
 
-void MainWindow::on_realizarReservaButton_clicked()
+void MainWindow::on_duvidasButton_clicked()
 {
     RealizarReservaDialog dialog(this, loggedInUsername);
     dialog.exec();
@@ -53,7 +53,7 @@ void MainWindow::on_grupoButton_clicked()
     dialog.exec();
 }
 
-void MainWindow::on_gerarRelatorioButton_clicked()
+void MainWindow::on_agendaButton_clicked()
 {
     QString fileName = "relatorio_reservas_paradise.txt";
     gerenciador->gerar_Relatorio(fileName.toStdString());
@@ -70,6 +70,6 @@ void MainWindow::on_gerarRelatorioButton_clicked()
 
 void MainWindow::on_sairButton_clicked()
 {
-    QMessageBox::information(this,"Sair", "Saindo do sistema, até logoo....");
+    QMessageBox::information(this, "Sair", "Saindo do sistema, até logo....");
     QApplication::quit();
 }
