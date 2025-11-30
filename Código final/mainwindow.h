@@ -13,28 +13,50 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+//------------------------------------------------------------------
+// Responsabilidade: Janela principal do sistema EducaUTFPR
+// Gerencia a navegação entre os diferentes módulos do sistema:
+//   - Central de Dúvidas (Fórum)
+//   - Dúvidas (Sistema de perguntas e respostas por disciplina)
+//   - Grupos de Estudo (Listar Reservas)
+//   - Agenda Acadêmica (Gerenciar tarefas acadêmicas)
+//
+// Também exibe informações do usuário logado
+//-----------------------------------------------------------------
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    public:
-        explicit MainWindow(QWidget *parent = nullptr);
-        ~MainWindow();
+public:
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
-    public slots:
-        void setLoggedInUser(const QString& username);
+public slots:
+    // -------- SLOT PÚBLICO - Define o usuário logado no sistema ------------
+    // Atualiza a label de boas-vindas com o nome do usuário
+    // -----------------------------------------------------------------------
+    void setLoggedInUser(const QString& username);
 
-    private slots:
-        //Slots pra cada janela diferente e o sair
-        void on_agendaButton_clicked();
-        void on_centralDuvidasButton_clicked();
-        void on_grupoButton_clicked();
-        void on_duvidasButton_clicked();
-        void on_sairButton_clicked();
+private slots:
+    // Abre a janela de Agenda Acadêmica
+    void on_agendaButton_clicked();
 
-    private:
-        Ui::MainWindow *ui;
-        QString loggedInUsername;          // Armazena o nome do atendente para salvar no 'Bem vindo'
-        Gerenciador_Reservas* gerenciador; //Para egrar os relatorios
+    // Abre a Central de Dúvidas (Fórum)
+    void on_centralDuvidasButton_clicked();
+
+    // Abre a janela de Grupos de Estudo (Listar Reservas)
+    void on_grupoButton_clicked();
+
+    // Abre a janela de Dúvidas (Sistema de perguntas/respostas)
+    void on_duvidasButton_clicked();
+
+    // Fecha o sistema
+    void on_sairButton_clicked();
+
+private:
+    Ui::MainWindow *ui;                  // Interface visual
+    QString loggedInUsername;            // Nome do usuário logado
+    Gerenciador_Reservas* gerenciador;   // Gerenciador de reservas
 };
-#endif // MAINWINDOW_H
+
+#endif
