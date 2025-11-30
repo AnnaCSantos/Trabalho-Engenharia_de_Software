@@ -5,6 +5,7 @@ Na aula do dia 11/11, como sugerido pelo professor, fizemos uma separação do q
 Semana 1:
 
 Anna: arrumar barra da primeira página + botões (código)
+- Concluido
 
 Bianca: mudar os nomes dos arquivos e variáveis + comentários
 
@@ -14,10 +15,12 @@ Gabrielle: melhorar documentação do git (pasta zip + readme)
 Semana 2:
 
 Anna: revisar os padrões de projeto, montar a janela do perfil (código)
+- Perfil feito, porem falta uns ajustes / interligar o banco de dados
 
 Bianca: montar a central de dúvidas + banco de dados (código)
 
 Gabrielle: montar a agenda (código)
+- feito, mas falta interligar com o banco de dados
 
 Semana 3: 
 
@@ -26,3 +29,4 @@ Anna: refatoração do código
 Bianca: adicionar diagramas + dúvidas (código)
 
 Gabrielle: montar a janela de grupo de estudos (código)
+- em andamento
