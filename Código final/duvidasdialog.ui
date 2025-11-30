@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DuvidasDialog</class>
+ <widget class="QDialog" name="DuvidasDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>📚 Dúvidas EducaUTFPR</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+/* ====== FUNDO PRINCIPAL COM IMAGEM ====== */
+QDialog#DuvidasDialog {
+    background-image: url(:/images/imagens/fundo_2.png);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ====== BARRA DE NAVEGAÇÃO ====== */
+QLabel#navBar {
+    background-color: #0f1011;
+}
+
+/* ====== OVERLAY SEMI-TRANSPARENTE ====== */
+QWidget#centralWidget {
+    background-color: rgba(26, 22, 26, 0.85);
+    border-radius: 15px;
+}
+
+/* ====== TÍTULO PRINCIPAL ====== */
+QLabel#tituloLabel {
+    color: #F4B315;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 15px;
+    background-color: transparent;
+}
+
+/* ====== SUBTÍTULO ====== */
+QLabel#subtituloLabel {
+    color: #8E6915;
+    font-size: 14px;
+    background-color: transparent;
+}
+
+/* ====== LOGO E ÍCONES ====== */
+QLabel#logoLabel, QLabel#homeButton, QLabel#perfilButton {
+    background-color: transparent;
+    border-radius: 50px;
+}
+
+/* ====== BARRA DE BUSCA ====== */
+QLineEdit#searchLine {
+    background-color: rgb(236, 236, 236);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+}
+
+/* ====== BOTÕES PRINCIPAIS ====== */
+QPushButton {
+    background-color: #F4B315;
+    color: #1A161A;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QPushButton:hover {
+    background-color: #D3AF35;
+}
+
+QPushButton:pressed {
+    background-color: #8E6915;
+}
+
+/* ====== BOTÃO FECHAR ====== */
+QPushButton#fecharButton {
+    background-color: #423738;
+    color: #F4B315;
+    border: 2px solid #F4B315;
+}
+
+QPushButton#fecharButton:hover {
+    background-color: #524447;
+    border-color: #D3AF35;
+}
+
+/* ====== COMBOBOX (FILTRO) ====== */
+QComboBox {
+    background-color: rgba(66, 55, 56, 0.9);
+    color: #F4B315;
+    border: 2px solid #F4B315;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QComboBox:hover {
+    border-color: #D3AF35;
+    background-color: rgba(82, 68, 71, 0.9);
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 30px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #F4B315;
+    margin-right: 8px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #423738;
+    color: #F4B315;
+    selection-background-color: #F4B315;
+    selection-color: #1A161A;
+    border: 2px solid #F4B315;
+}
+
+/* ====== SCROLL AREA ====== */
+QScrollArea {
+    border: 2px solid #423738;
+    border-radius: 10px;
+    background-color: rgba(26, 22, 26, 0.7);
+}
+
+QScrollBar:vertical {
+    background-color: #423738;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #F4B315;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #D3AF35;
+}
+
+/* ====== CONTAINER DAS DÚVIDAS ====== */
+QWidget#containerDuvidas {
+    background-color: transparent;
+}
+
+/* ====== LINHA SEPARADORA ====== */
+Line {
+    background-color: #F4B315;
+}
+
+/* ====== LABELS GERAIS ====== */
+QLabel {
+    color: #F4B315;
+    background-color: transparent;
+}
+
+QLabel#infoLabel {
+    color: #8E6915;
+    font-size: 12px;
+    font-style: italic;
+}
+   </string>
+  </property>
+  
+  <layout class="QVBoxLayout" name="mainLayoutOuter">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   
+   <item>
+    <!-- ============================================================ -->
+    <!-- BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <!-- ============================================================ -->
+    <widget class="QWidget" name="navWidget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>80</height>
+      </size>
+     </property>
+     
+     <!-- Logo UTFPR -->
+     <widget class="QLabel" name="logoLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>80</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 20px;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="icons.qrc">:/images/imagens/Logo_1.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     
+     <!-- Barra de Busca -->
+     <widget class="QLineEdit" name="searchLine">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>25</y>
+        <width>900</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(236, 236, 236);</string>
+      </property>
+      <property name="placeholderText">
+       <string>🔍 Buscar dúvidas...</string>
+      </property>
+     </widget>
+     
+     <!-- Botão Home -->
+     <widget class="QLabel" name="homeButton">
+      <property name="geometry">
+       <rect>
+        <x>1030</x>
+        <y>20</y>
+        <width>45</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 50px;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="icons.qrc">:/images/imagens/inicio.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     
+     <!-- Botão Perfil -->
+     <widget class="QLabel" name="perfilButton">
+      <property name="geometry">
+       <rect>
+        <x>1090</x>
+        <y>20</y>
+        <width>45</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 50px;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="icons.qrc">:/images/imagens/perfil.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     
+     <!-- Fundo da barra -->
+     <widget class="QLabel" name="navBar">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1200</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #0f1011;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     
+     <zorder>navBar</zorder>
+     <zorder>logoLabel</zorder>
+     <zorder>searchLine</zorder>
+     <zorder>homeButton</zorder>
+     <zorder>perfilButton</zorder>
+    </widget>
+   </item>
+   
+   <item>
+    <!-- Widget central -->
+    <widget class="QWidget" name="centralWidget">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>15</number>
+      </property>
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="topMargin">
+       <number>20</number>
+      </property>
+      <property name="rightMargin">
+       <number>20</number>
+      </property>
+      <property name="bottomMargin">
+       <number>20</number>
+      </property>
+      
+      <!-- TÍTULO -->
+      <item>
+       <widget class="QLabel" name="tituloLabel">
+        <property name="text">
+         <string>📚 Dúvidas EducaUTFPR</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      
+      <!-- SUBTÍTULO -->
+      <item>
+       <widget class="QLabel" name="subtituloLabel">
+        <property name="text">
+         <string>Tire suas dúvidas e ajude outros estudantes</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      
+      <!-- LINHA SEPARADORA -->
+      <item>
+       <widget class="Line" name="line">
+        <property name="styleSheet">
+         <string notr="true">background-color: #F4B315;</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>2</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      
+      <!-- BARRA DE FILTROS E BOTÃO ADICIONAR -->
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>15</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>🔎 Filtrar por:</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #F4B315; font-size: 14px; font-weight: bold;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="filtroComboBox">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="adicionarDuvidaButton">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>45</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>➕ Nova Dúvida</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      
+      <!-- ÁREA DE SCROLL COM AS DÚVIDAS -->
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <widget class="QWidget" name="containerDuvidas">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>1136</width>
+           <height>450</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      
+      <!-- RODAPÉ COM INFO E BOTÃO FECHAR -->
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="infoLabel">
+          <property name="text">
+           <string>💡 Dica: Use os filtros para encontrar dúvidas específicas por disciplina</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #8E6915; font-size: 12px; font-style: italic;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="fecharButton">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>45</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>✕ Fechar</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ 
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ 
+ <connections>
+  <connection>
+   <sender>fecharButton</sender>
+   <signal>clicked()</signal>
+   <receiver>DuvidasDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1100</x>
+     <y>770</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>600</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
