@@ -67,6 +67,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         forumdialog.cpp
         forumdialog.h
         forumpostsdialog.h forumpostsdialog.cpp forumpostsdialog.ui
+        agendaacademicadialog.h agendaacademicadialog.cpp agendaacademicadialog.ui
+        duvidasdialog.h duvidasdialog.cpp duvidasdialog.ui
+        perfildialog.h perfildialog.cpp perfildialog.ui
     )
 else()
     # Lógica para Qt 5 (ou Android com Qt 5)
