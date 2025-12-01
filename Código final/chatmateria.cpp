@@ -70,7 +70,7 @@ void ChatMateria::setupDatabase()
 int ChatMateria::getIdUsuario(const QString& username)
 {
     QSqlQuery query(dbConnection);
-    query.prepare("SELECT id_usuario FROM Usuario WHERE usuario = ?");
+    query.prepare("SELECT id_usuario FROM USUARIOS WHERE usuario = ?");
     query.addBindValue(username);
 
     if (query.exec() && query.next()) {
@@ -105,7 +105,7 @@ void ChatMateria::carregarHistorico()
     query.prepare(
         "SELECT m.id_mensagem, m.mensagem, m.data_envio, u.usuario "
         "FROM Mensagens_Chat m "
-        "JOIN Usuario u ON m.id_usuario = u.id_usuario "
+        "JOIN USUARIOS u ON m.id_usuario = u.id_usuario "
         "WHERE m.id_sala = ? "
         "ORDER BY m.data_envio ASC"
         );
@@ -153,7 +153,7 @@ void ChatMateria::atualizarChat()
     query.prepare(
         "SELECT m.id_mensagem, m.mensagem, m.data_envio, u.usuario "
         "FROM Mensagens_Chat m "
-        "JOIN Usuario u ON m.id_usuario = u.id_usuario "
+        "JOIN USUARIOS u ON m.id_usuario = u.id_usuario "
         "WHERE m.id_sala = ? AND m.id_mensagem > ? "
         "ORDER BY m.data_envio ASC"
         );
@@ -332,7 +332,7 @@ void ChatMateria::carregarParticipantes()
     query.prepare(
         "SELECT u.usuario "
         "FROM Participantes_Sala p "
-        "JOIN Usuario u ON p.id_usuario = u.id_usuario "
+        "JOIN USUARIOS u ON p.id_usuario = u.id_usuario "
         "WHERE p.id_sala = ? "
         "ORDER BY u.usuario"
         );
