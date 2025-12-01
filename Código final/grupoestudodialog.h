@@ -74,13 +74,14 @@ private:
     // Configuração inicial
     void setupDatabase();
     void criarTabelasNecessarias();
-    void popularMateriasCompletas();  // ✅ TODAS AS MATÉRIAS DA UTFPR
-    void setupNavigationBar();        // ✅ NOVO: Configura navegação
+    void popularMateriasCompletas();  //Inclui TODAS AS MATÉRIAS DA UTFPR
+    void setupNavigationBar();        //Configura navegação
 
     // Navegação
     void mostrarTela(const QString& tela);
 
     // Carregar dados
+    void popularComboMateriasCriacao(); //Materias
     void carregarMateriasDaCategoria(const QString& categoria);
     void carregarSalasPublicas();
 
