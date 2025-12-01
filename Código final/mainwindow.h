@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QString>
-#include "backend/gerenciador_reservas.h"
 #include "logindialog.h"
 
 QT_BEGIN_NAMESPACE
@@ -56,7 +55,6 @@ private slots:
 private:
     Ui::MainWindow *ui;                  // Interface visual
     QString loggedInUsername;            // Nome do usuário logado
-    Gerenciador_Reservas* gerenciador;   // Gerenciador de reservas
 };
 
 #endif
