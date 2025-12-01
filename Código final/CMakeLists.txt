@@ -31,21 +31,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
-        backend/atendente.cpp
-        backend/atendente.h
-        backend/autenticador.cpp
-        backend/autenticador.h
-        backend/cliente.cpp
-        backend/cliente.h
         backend/data.cpp
         backend/data.h
-        backend/gerenciador_reservas.cpp
-        backend/gerenciador_reservas.h
-        backend/politica_desconto.cpp
-        backend/politica_desconto.h
-        backend/reserva.cpp
-        backend/reserva.h
-        backend/tipo_hotel.h
         mainwindow.h
         mainwindow.ui
 )
@@ -58,9 +45,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         logindialog.h logindialog.cpp logindialog.ui
-        consultardisponibilidadedialog.h consultardisponibilidadedialog.cpp consultardisponibilidadedialog.ui
-        realizarreservadialog.h realizarreservadialog.cpp realizarreservadialog.ui
-        listarreservadialog.h listarreservadialog.cpp listarreservadialog.ui
         icons.qrc
         criarconta.h criarconta.cpp criarconta.ui
         forumdialog.ui
@@ -70,6 +54,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         agendaacademicadialog.h agendaacademicadialog.cpp agendaacademicadialog.ui
         duvidasdialog.h duvidasdialog.cpp duvidasdialog.ui
         perfildialog.h perfildialog.cpp perfildialog.ui
+        grupoestudodialog.h grupoestudodialog.cpp grupoestudodialog.ui
+        chatmateria.h chatmateria.cpp chatmateria.ui
+        criargrupodialog.h criargrupodialog.cpp criargrupodialog.ui
     )
 else()
     # Lógica para Qt 5 (ou Android com Qt 5)
@@ -81,9 +68,6 @@ else()
         add_executable(Sistema_EducaUTFPR
             ${PROJECT_SOURCES}
             logindialog.h logindialog.cpp logindialog.ui
-            consultardisponibilidadedialog.h consultardisponibilidadedialog.cpp consultardisponibilidadedialog.ui
-            realizarreservadialog.h realizarreservadialog.cpp realizarreservadialog.ui
-            listarreservadialog.h listarreservadialog.cpp listarreservadialog.ui
             icons.qrc
             criarconta.h criarconta.cpp criarconta.ui
         )
