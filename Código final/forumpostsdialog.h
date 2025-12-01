@@ -3,34 +3,55 @@
 
 #include <QDialog>
 #include <QSqlDatabase>
+#include <QVBoxLayout>
 
 namespace Ui {
 class ForumPostsDialog;
 }
 
+// ============================================================================
+// CLASSE ForumPostsDialog - Detalhes de uma Dúvida
+// ============================================================================
+// Responsabilidade: Exibir uma dúvida completa com suas respostas
+// Funcionalidades:
+//   - Mostrar título, descrição, autor e data da dúvida
+//   - Listar todas as respostas
+//   - Permitir adicionar novas respostas
+//   - Sistema de curtidas (dúvidas e respostas)
+// ============================================================================
 class ForumPostsDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    // O construtor recebe o ID do Fórum que foi clicado
-    explicit ForumPostsDialog(QWidget *parent = nullptr, int forumId = 0);
+    explicit ForumPostsDialog(QWidget *parent = nullptr,
+                              int idDuvida = 0,
+                              const QString& username = "");
     ~ForumPostsDialog();
 
-private slots:
-    // Slot para quando um post específico for clicado
-    void on_postClicked(int postId, const QString &titulo);
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;  // <-- ADICIONE ESTA LINHA
 
-    //void on_voltarButton_clicked();
+private slots:
+    void on_responderButton_clicked();
+    void on_voltarButton_clicked();
+    void onCurtirDuvida();
+    void onCurtirResposta(int idResposta);
 
 private:
-    Ui::ForumPostsDialog *ui; // Ponteiro para os itens do .ui
+    Ui::ForumPostsDialog *ui;
+    int duvidaId;
+    QString loggedInUsername;
     QSqlDatabase dbConnection;
-    int m_forumId; // Variável para guardar o ID do fórum
+    QVBoxLayout *respostasLayout;
 
+    // Métodos auxiliares
     void setupDatabase();
-    void carregarPosts(); // função que cria os itens dinâmicos
-    int contarLikes(int postId); // Função auxiliar para contar os likes
+    void carregarDuvida();
+    void carregarRespostas();
+    int getIdUsuario(const QString& username);
+    bool usuarioJaCurtiuDuvida();
+    bool usuarioJaCurtiuResposta(int idResposta);
 };
 
-#endif // FORUMPOSTSDIALOG_H
+#endif
