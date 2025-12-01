@@ -6,158 +6,426 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>566</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Central de Dúvidas</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog { 
+   <string notr="true">
+/* ====== FUNDO PRINCIPAL COM IMAGEM ====== */
+QDialog#ForumDialog {
     background-image: url(:/images/imagens/fundo_2.png);
-}</string>
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ====== BARRA DE NAVEGAÇÃO ====== */
+QLabel#navBar {
+    background-color: #0f1011;
+}
+
+/* ====== OVERLAY SEMI-TRANSPARENTE ====== */
+QWidget#centralWidget {
+    background-color: rgba(26, 22, 26, 0.85);
+    border-radius: 15px;
+}
+
+/* ====== TÍTULO PRINCIPAL ====== */
+QLabel#tituloLabel {
+    color: #F4B315;
+    font-size: 26px;
+    font-weight: bold;
+    padding: 12px;
+    background-color: transparent;
+}
+
+/* ====== SUBTÍTULO ====== */
+QLabel#subtituloLabel {
+    color: #D3AF35;
+    font-size: 13px;
+    background-color: transparent;
+    padding: 5px;
+}
+
+/* ====== ESTATÍSTICAS ====== */
+QLabel#estatisticasLabel {
+    color: #8E6915;
+    font-size: 12px;
+    background-color: rgba(66, 55, 56, 0.5);
+    padding: 8px 15px;
+    border-radius: 6px;
+}
+
+/* ====== LOGO E ÍCONES ====== */
+QLabel#logoLabel, QLabel#homeButton, QLabel#perfilButton {
+    background-color: transparent;
+    border-radius: 50px;
+}
+
+/* ====== BARRA DE BUSCA ====== */
+QLineEdit#line_login {
+    background-color: #423738;
+    color: #F4B315;
+    border: 2px solid #8E6915;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+QLineEdit#line_login:focus {
+    border-color: #F4B315;
+    background-color: #524447;
+}
+
+/* ====== BOTÃO NOVA DÚVIDA ====== */
+QPushButton#novaDuvidaButton {
+    background-color: #27AE60;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton#novaDuvidaButton:hover {
+    background-color: #229954;
+}
+
+QPushButton#novaDuvidaButton:pressed {
+    background-color: #1E8449;
+}
+
+/* ====== BOTÃO VOLTAR ====== */
+QPushButton#voltarButton {
+    background-color: #423738;
+    color: #F4B315;
+    border: 2px solid #F4B315;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+QPushButton#voltarButton:hover {
+    background-color: #524447;
+    border-color: #D3AF35;
+}
+
+/* ====== SCROLL AREA ====== */
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+QScrollBar:vertical {
+    background-color: #423738;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #F4B315;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #D3AF35;
+}
+
+/* ====== CONTAINER ====== */
+QWidget#containerBotoes {
+    background-color: transparent;
+}
+
+/* ====== LABELS GERAIS ====== */
+QLabel {
+    color: #F4B315;
+    background-color: transparent;
+}
+   </string>
   </property>
-  <widget class="QLineEdit" name="line_login">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>30</y>
-     <width>571</width>
-     <height>31</height>
-    </rect>
+  <layout class="QVBoxLayout" name="mainLayoutOuter">
+   <property name="spacing">
+    <number>0</number>
    </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(236, 236, 236);</string>
+   <property name="leftMargin">
+    <number>0</number>
    </property>
-   <property name="placeholderText">
-    <string>🔍</string>
+   <property name="topMargin">
+    <number>0</number>
    </property>
-  </widget>
-  <widget class="QLabel" name="perfilButon">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>23</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
+   <property name="rightMargin">
+    <number>0</number>
    </property>
-   <property name="styleSheet">
-    <string notr="true">border-radiums: 50px;
-</string>
+   <property name="bottomMargin">
+    <number>0</number>
    </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="pixmap">
-    <pixmap resource="icons.qrc">:/images/imagens/perfil.png</pixmap>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="homeButton">
-   <property name="geometry">
-    <rect>
-     <x>680</x>
-     <y>23</y>
-     <width>41</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border-radiums: 50px;
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="pixmap">
-    <pixmap resource="icons.qrc">:/images/imagens/inicio.png</pixmap>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="atendentelabel_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>-10</y>
-     <width>91</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border-radiums: 20px;
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="pixmap">
-    <pixmap resource="icons.qrc">:/images/imagens/Logo_1.png</pixmap>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="nav">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>-20</y>
-     <width>971</width>
-     <height>101</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: #0f1011;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QScrollArea" name="scrollArea">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>120</y>
-     <width>731</width>
-     <height>421</height>
-    </rect>
-   </property>
-   <property name="widgetResizable">
-    <bool>true</bool>
-   </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>729</width>
-      <height>419</height>
-     </rect>
-    </property>
-    <widget class="QWidget" name="containerBotoes" native="true">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>701</width>
-       <height>401</height>
-      </rect>
+   <item>
+    <widget class="QWidget" name="navWidget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>80</height>
+      </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>80</height>
+      </size>
+     </property>
+     <widget class="QLabel" name="logoLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>80</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 20px;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="icons.qrc">:/images/imagens/Logo_1.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="line_login">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>25</y>
+        <width>900</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>Buscar dúvidas...</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="homeButton">
+      <property name="geometry">
+       <rect>
+        <x>1030</x>
+        <y>20</y>
+        <width>45</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 50px;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="icons.qrc">:/images/imagens/inicio.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="perfilButton">
+      <property name="geometry">
+       <rect>
+        <x>1090</x>
+        <y>20</y>
+        <width>45</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 50px;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="icons.qrc">:/images/imagens/perfil.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="navBar">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1200</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #0f1011;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <zorder>navBar</zorder>
+     <zorder>logoLabel</zorder>
+     <zorder>line_login</zorder>
+     <zorder>homeButton</zorder>
+     <zorder>perfilButton</zorder>
     </widget>
-   </widget>
-  </widget>
-  <zorder>nav</zorder>
-  <zorder>line_login</zorder>
-  <zorder>perfilButon</zorder>
-  <zorder>homeButton</zorder>
-  <zorder>atendentelabel_2</zorder>
-  <zorder>scrollArea</zorder>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>15</number>
+     </property>
+     <property name="leftMargin">
+      <number>25</number>
+     </property>
+     <property name="topMargin">
+      <number>20</number>
+     </property>
+     <property name="rightMargin">
+      <number>25</number>
+     </property>
+     <property name="bottomMargin">
+      <number>20</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="headerLayout">
+       <property name="spacing">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="tituloLabel">
+         <property name="text">
+          <string>Central de Dúvidas EducaUTFPR</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="subtituloLabel">
+         <property name="text">
+          <string>Tire suas dúvidas e ajude seus colegas</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="styleSheet">
+        <string notr="true">background-color: #F4B315;</string>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>2</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="acoesLayout">
+       <property name="spacing">
+        <number>15</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="estatisticasLabel">
+         <property name="text">
+          <string>0 dúvidas | 0 respondidas</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="voltarButton">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>← Voltar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="novaDuvidaButton">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>+ Nova Dúvida</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="containerBotoes">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>1150</width>
+          <height>491</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources>
   <include location="icons.qrc"/>
