@@ -14,8 +14,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow),
-    gerenciador(Gerenciador_Reservas::getInstance())
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowTitle("EducaUTFPR - Home");
