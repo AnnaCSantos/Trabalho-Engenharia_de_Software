@@ -31,14 +31,20 @@ GrupoEstudoDialog::GrupoEstudoDialog(QWidget *parent, const QString& username)
     setupDatabase();
     criarTabelasNecessarias();
 
-    // Carrega as matérias no ComboBox de criar sala
-    QSqlQuery query(dbConnection);
-    query.exec("SELECT id_materia, nome FROM Materias ORDER BY nome");
-    while (query.next()) {
-        int id = query.value(0).toInt();
-        QString nome = query.value(1).toString();
-        ui->materiaComboBox->addItem(nome, id);
-    }
+
+    // Carrega as categorias no ComboBox (ordem lógica do curso)
+    ui->categoriaComboBox->clear();
+    ui->categoriaComboBox->addItem("📚 Todas as Matérias");
+    ui->categoriaComboBox->addItem("📐 Matemática");
+    ui->categoriaComboBox->addItem("⚛️ Física");
+    ui->categoriaComboBox->addItem("💻 Programação");
+    ui->categoriaComboBox->addItem("🗄️ Banco de Dados");
+    ui->categoriaComboBox->addItem("🌐 Redes e Sistemas");
+    ui->categoriaComboBox->addItem("🔧 Engenharia");
+    ui->categoriaComboBox->addItem("⚗️ Química");
+    ui->categoriaComboBox->addItem("📚 Humanas e Sociais");
+    ui->categoriaComboBox->addItem("📄 TCC e Estágio");
+    ui->categoriaComboBox->addItem("🎯 Atividades Extras");
 
     // Conecta o botão de confirmar criação
     connect(ui->confirmarCriarButton, &QPushButton::clicked,
@@ -95,6 +101,7 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
     QSqlQuery query(dbConnection);
 
     // Tabela de Matérias
+    query.exec("DROP TABLE IF EXISTS Materias");
     query.exec(
         "CREATE TABLE IF NOT EXISTS Materias ("
         "id_materia INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -150,115 +157,125 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
 }
 
 // ============================================================================
-// POPULAR MATÉRIAS COMPLETAS
+// POPULAR MATÉRIAS COMPLETAS - ORGANIZADO POR CATEGORIA
 // ============================================================================
 void GrupoEstudoDialog::popularMateriasCompletas()
 {
     QSqlQuery query(dbConnection);
 
+    // 🎨 Paleta de cores baseada no tema do sistema
     QList<QStringList> materias = {
-        // MATEMÁTICA
-        {"Cálculo Diferencial e Integral 1", "Matemática", "📐", "#FF6B6B"},
-        {"Cálculo Diferencial e Integral 2", "Matemática", "📐", "#FF8787"},
-        {"Cálculo Diferencial e Integral 3", "Matemática", "📐", "#FFA07A"},
-        {"Álgebra Linear", "Matemática", "📊", "#FFB6B9"},
-        {"Geometria Analítica", "Matemática", "📏", "#FFCCCC"},
-        {"Matemática Discreta", "Matemática", "🔢", "#FF9999"},
-        {"Equações Diferenciais Ordinárias", "Matemática", "📈", "#FFB347"},
-        {"Cálculo Numérico", "Matemática", "🔢", "#FFAB73"},
-        {"Probabilidade e Estatística", "Matemática", "📊", "#FFC9A0"},
-        {"Análise de Sistemas Lineares", "Matemática", "📈", "#FFD9B3"},
 
-        // FÍSICA
-        {"Física Teórica 1", "Física", "⚛️", "#4ECDC4"},
-        {"Física Teórica 2", "Física", "⚛️", "#45B7D1"},
-        {"Física Teórica 3", "Física", "⚛️", "#5AD5E5"},
-        {"Física Experimental 1", "Física", "🧪", "#70E0F0"},
-        {"Física Experimental 2", "Física", "🧪", "#85EBFA"},
+    // ========== 📐 MATEMÁTICA ==========
+    {"Cálculo Diferencial e Integral 1", "Matemática", "📐", "#F4B315"},
+        {"Cálculo Diferencial e Integral 2", "Matemática", "📐", "#E5A314"},
+        {"Cálculo Diferencial e Integral 3", "Matemática", "📐", "#D69313"},
+        {"Álgebra Linear", "Matemática", "📊", "#C78312"},
+        {"Geometria Analítica", "Matemática", "📏", "#B87311"},
+        {"Matemática Discreta", "Matemática", "🔢", "#A96310"},
+        {"Equações Diferenciais Ordinárias", "Matemática", "📈", "#9A530F"},
+        {"Cálculo Numérico", "Matemática", "🔢", "#8B430E"},
+        {"Probabilidade e Estatística", "Matemática", "📊", "#7C330D"},
+        {"Análise de Sistemas Lineares", "Matemática", "📈", "#8E6915"},
 
-        // PROGRAMAÇÃO
-        {"Fundamentos de Programação 1", "Programação", "💻", "#F38181"},
-        {"Fundamentos de Programação 2", "Programação", "💻", "#FF8FA3"},
-        {"Programação Orientada a Objetos", "Programação", "🎲", "#FFADAD"},
-        {"Estrutura de Dados 1", "Programação", "📦", "#FFD6A5"},
-        {"Estrutura de Dados 2", "Programação", "📦", "#FDFFB6"},
-        {"Compiladores", "Programação", "📝", "#CAFFBF"},
-        {"Desenvolvimento de Aplicações Web", "Programação", "🌐", "#9BF6FF"},
+        // ========== ⚛️ FÍSICA ==========
+        {"Física Teórica 1", "Física", "⚛️", "#4A90E2"},
+        {"Física Teórica 2", "Física", "⚛️", "#3A80D2"},
+        {"Física Teórica 3", "Física", "⚛️", "#2A70C2"},
+        {"Física Experimental 1", "Física", "🧪", "#5BA0F2"},
+        {"Física Experimental 2", "Física", "🧪", "#6BB0FF"},
 
-        // BANCO DE DADOS
-        {"Banco de Dados", "Banco de Dados", "🗄️", "#A0C4FF"},
+        // ========== 💻 PROGRAMAÇÃO E COMPUTAÇÃO ==========
+        {"Fundamentos de Programação 1", "Programação", "💻", "#E74C3C"},
+        {"Fundamentos de Programação 2", "Programação", "💻", "#C0392B"},
+        {"Programação Orientada a Objetos", "Programação", "🎲", "#A93226"},
+        {"Estrutura de Dados 1", "Programação", "📦", "#922B21"},
+        {"Estrutura de Dados 2", "Programação", "📦", "#7B241C"},
+        {"Compiladores", "Programação", "📝", "#641E16"},
+        {"Teoria da Computação", "Programação", "🧮", "#943126"},
+        {"Introdução à Lógica para Computação", "Programação", "🧠", "#A43B2B"},
 
-        // REDES E SISTEMAS
-        {"Sistemas Operacionais", "Redes e Sistemas", "💾", "#BDB2FF"},
-        {"Redes de Computadores", "Redes e Sistemas", "🌐", "#FFC6FF"},
-        {"Comunicação de Dados", "Redes e Sistemas", "📡", "#E7C6FF"},
-        {"Sistemas Distribuídos", "Redes e Sistemas", "☁️", "#C8B6FF"},
-        {"Segurança e Auditoria de Sistemas", "Redes e Sistemas", "🔐", "#D4A5FF"},
+        // ========== 🗄️ BANCO DE DADOS ==========
+        {"Banco de Dados", "Banco de Dados", "🗄️", "#9B59B6"},
 
-        // ENGENHARIA
-        {"Introdução à Engenharia de Computação", "Engenharia", "💡", "#FFE66D"},
-        {"Arquitetura e Organização de Computadores", "Engenharia", "🖥️", "#FFEB99"},
-        {"Circuitos Digitais", "Engenharia", "📌", "#FFF4B8"},
-        {"Sistemas Digitais", "Engenharia", "🔧", "#FFFBD4"},
-        {"Eletrônica A", "Engenharia", "📌", "#FDE4CF"},
-        {"Eletrônica B", "Engenharia", "📌", "#FFCFD2"},
-        {"Análise de Circuitos Elétricos 1", "Engenharia", "⚡", "#F1C0E8"},
-        {"Materiais e Equipamentos Elétricos", "Engenharia", "⚡", "#CFBAF0"},
-        {"Desenho Técnico", "Engenharia", "✏️", "#A3C4F3"},
-        {"Fundamentos de Controle", "Engenharia", "🎛️", "#90DBF4"},
-        {"Controle Digital", "Engenharia", "🎮", "#8EECF5"},
-        {"Lógica Reconfigurável", "Engenharia", "🔧", "#98F5E1"},
-        {"Sistemas Microcontrolados", "Engenharia", "⚙️", "#B9FBC0"},
-        {"Sistemas Embarcados", "Engenharia", "🔧", "#C7CEEA"},
-        {"Instrumentação Eletrônica", "Engenharia", "📡", "#FFDAB9"},
-        {"Processamento Digital de Sinais", "Engenharia", "📊", "#FFDFBA"},
-        {"Oficina de Integração 1", "Engenharia", "🛠️", "#FFFFBA"},
-        {"Oficina de Integração 2", "Engenharia", "🛠️", "#BAFFC9"},
+        // ========== 🌐 REDES E SISTEMAS ==========
+        {"Sistemas Operacionais", "Redes e Sistemas", "💾", "#16A085"},
+        {"Redes de Computadores", "Redes e Sistemas", "🌐", "#138D75"},
+        {"Comunicação de Dados", "Redes e Sistemas", "📡", "#117A65"},
+        {"Sistemas Distribuídos", "Redes e Sistemas", "☁️", "#0E6655"},
+        {"Segurança e Auditoria de Sistemas", "Redes e Sistemas", "🔒", "#0B5345"},
 
-        // QUÍMICA
-        {"Química Geral", "Química", "⚗️", "#95E1D3"},
-        {"Química Experimental", "Química", "🧪", "#A8E6CF"},
+        // ========== 🔧 ENGENHARIA DE HARDWARE ==========
+        {"Introdução à Engenharia de Computação", "Engenharia", "💡", "#F39C12"},
+        {"Arquitetura e Organização de Computadores", "Engenharia", "🖥️", "#E67E22"},
+        {"Circuitos Digitais", "Engenharia", "🔌", "#D68910"},
+        {"Sistemas Digitais", "Engenharia", "🔧", "#CA6F1E"},
+        {"Eletrônica A", "Engenharia", "🔌", "#BA4A00"},
+        {"Eletrônica B", "Engenharia", "🔌", "#A04000"},
+        {"Análise de Circuitos Elétricos 1", "Engenharia", "⚡", "#873600"},
+        {"Materiais e Equipamentos Elétricos", "Engenharia", "⚡", "#6E2C00"},
+        {"Desenho Técnico", "Engenharia", "✏️", "#DC7633"},
 
-        // COMPUTAÇÃO TEÓRICA
-        {"Teoria da Computação", "Programação", "🧮", "#DCEDC1"},
-        {"Introdução à Lógica para Computação", "Programação", "🧠", "#FFD3B6"},
-        {"Sistemas Inteligentes 1", "Programação", "🤖", "#FFAAA5"},
+        // ========== 🎛️ CONTROLE E SISTEMAS EMBARCADOS ==========
+        {"Fundamentos de Controle", "Engenharia", "🎛️", "#28B463"},
+        {"Controle Digital", "Engenharia", "🎮", "#239B56"},
+        {"Lógica Reconfigurável", "Engenharia", "🔧", "#1E8449"},
+        {"Sistemas Microcontrolados", "Engenharia", "⚙️", "#196F3D"},
+        {"Sistemas Embarcados", "Engenharia", "🔧", "#145A32"},
+        {"Instrumentação Eletrônica", "Engenharia", "📡", "#0E4B26"},
+        {"Processamento Digital de Sinais", "Engenharia", "📊", "#7DCEA0"},
 
-        // ENGENHARIA DE SOFTWARE
-        {"Engenharia de Software", "Programação", "🗂️", "#FF8B94"},
+        // ========== 🛠️ OFICINAS E PROJETOS ==========
+        {"Oficina de Integração 1", "Engenharia", "🛠️", "#5DADE2"},
+        {"Oficina de Integração 2", "Engenharia", "🛠️", "#3498DB"},
 
-        // HUMANAS E SOCIAIS
-        {"Comunicação Linguística", "Humanas e Sociais", "📝", "#A8DADC"},
-        {"Inglês Instrumental", "Humanas e Sociais", "🌍", "#457B9D"},
-        {"Metodologia de Pesquisa", "Humanas e Sociais", "📚", "#1D3557"},
-        {"Ciências do Ambiente", "Humanas e Sociais", "🌱", "#2A9D8F"},
-        {"Economia", "Humanas e Sociais", "💰", "#E76F51"},
-        {"Empreendedorismo", "Humanas e Sociais", "💡", "#F4A261"},
-        {"Relações Humanas e Liderança", "Humanas e Sociais", "🤝", "#E9C46A"},
-        {"Meio Ambiente e Sociedade", "Humanas e Sociais", "🌍", "#2A9134"},
-        {"Qualidade de Vida", "Humanas e Sociais", "💚", "#52B788"},
-        {"Aptidão Física", "Humanas e Sociais", "🏃", "#74C69D"},
-        {"Libras 1", "Humanas e Sociais", "👋", "#95D5B2"},
+        // ========== ⚗️ QUÍMICA ==========
+        {"Química Geral", "Química", "⚗️", "#1ABC9C"},
+        {"Química Experimental", "Química", "🧪", "#17A589"},
 
-        // TCC E ESTÁGIO
-        {"Trabalho de Conclusão de Curso 1", "Engenharia", "📄", "#B7E4C7"},
-        {"Trabalho de Conclusão de Curso 2", "Engenharia", "📄", "#D8F3DC"},
-        {"Estágio Curricular Obrigatório", "Engenharia", "💼", "#E8F5E9"},
+        // ========== 🤖 INTELIGÊNCIA ARTIFICIAL ==========
+        {"Sistemas Inteligentes 1", "Programação", "🤖", "#E74C3C"},
 
-        // ATIVIDADES COMPLEMENTARES
-        {"Atividades Complementares", "Humanas e Sociais", "🎯", "#C7CEEA"}
-    };
+        // ========== 🗂️ ENGENHARIA DE SOFTWARE ==========
+        {"Engenharia de Software", "Programação", "🗂️", "#95A5A6"},
+        {"Desenvolvimento de Aplicações Web", "Programação", "🌐", "#7F8C8D"},
 
-    for (const auto& mat : materias) {
-        query.prepare("INSERT INTO Materias (nome, categoria, icone, cor) VALUES (?, ?, ?, ?)");
-        query.addBindValue(mat[0]);
-        query.addBindValue(mat[1]);
-        query.addBindValue(mat[2]);
-        query.addBindValue(mat[3]);
-        query.exec();
+        // ========== 📚 HUMANAS E SOCIAIS ==========
+        {"Comunicação Linguística", "Humanas e Sociais", "📝", "#34495E"},
+        {"Inglês Instrumental", "Humanas e Sociais", "🌍", "#2C3E50"},
+        {"Metodologia de Pesquisa", "Humanas e Sociais", "📚", "#566573"},
+        {"Ciências do Ambiente", "Humanas e Sociais", "🌱", "#52BE80"},
+        {"Economia", "Humanas e Sociais", "💰", "#F4D03F"},
+        {"Empreendedorismo", "Humanas e Sociais", "💡", "#F7DC6F"},
+        {"Relações Humanas e Liderança", "Humanas e Sociais", "🤝", "#F8C471"},
+        {"Meio Ambiente e Sociedade", "Humanas e Sociais", "🌍", "#58D68D"},
+        {"Qualidade de Vida", "Humanas e Sociais", "💚", "#82E0AA"},
+        {"Aptidão Física", "Humanas e Sociais", "🏃", "#ABEBC6"},
+        {"Libras 1", "Humanas e Sociais", "👋", "#D5F4E6"},
+
+        // ========== 📄 TCC E ESTÁGIO ==========
+        {"Trabalho de Conclusão de Curso 1", "TCC e Estágio", "📄", "#85C1E2"},
+        {"Trabalho de Conclusão de Curso 2", "TCC e Estágio", "📄", "#5DADE2"},
+        {"Estágio Curricular Obrigatório", "TCC e Estágio", "💼", "#3498DB"},
+
+        // ========== 🎯 ATIVIDADES EXTRAS ==========
+        {"Atividades Complementares", "Atividades Extras", "🎯", "#AED6F1"}
+};
+
+// Insere as matérias no banco
+for (const auto& mat : materias) {
+    query.prepare("INSERT INTO Materias (nome, categoria, icone, cor) VALUES (?, ?, ?, ?)");
+    query.addBindValue(mat[0]); // Nome
+    query.addBindValue(mat[1]); // Categoria
+    query.addBindValue(mat[2]); // Ícone
+    query.addBindValue(mat[3]); // Cor
+
+    if (!query.exec()) {
+        qDebug() << "❌ Erro ao inserir matéria:" << mat[0] << query.lastError().text();
     }
+}
 
-    qDebug() << "✅ Matérias populadas com sucesso!";
+qDebug() << "✅ Matérias populadas com sucesso! Total:" << materias.size();
 }
 
 // ============================================================================
