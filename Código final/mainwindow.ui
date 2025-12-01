@@ -54,10 +54,10 @@ color: #FFFFFF;</string>
    <widget class="QLabel" name="logo">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>380</x>
       <y>0</y>
-      <width>91</width>
-      <height>91</height>
+      <width>111</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -227,7 +227,7 @@ font: 10pt &quot;Liberation Serif&quot;;</string>
       <x>-30</x>
       <y>-10</y>
       <width>971</width>
-      <height>101</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="tabletTracking">
@@ -238,22 +238,6 @@ font: 10pt &quot;Liberation Serif&quot;;</string>
     </property>
     <property name="text">
      <string/>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="line_login">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>30</y>
-      <width>571</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(236, 236, 236);</string>
-    </property>
-    <property name="placeholderText">
-     <string>🔍</string>
     </property>
    </widget>
    <widget class="QLabel" name="grupoLabel">
@@ -419,7 +403,7 @@ font-weight: bold;
      <string/>
     </property>
     <property name="icon">
-     <iconset resource="icons.qrc">
+     <iconset>
       <normaloff>:/images/imagens/saindo.png</normaloff>:/images/imagens/saindo.png</iconset>
     </property>
     <property name="iconSize">
@@ -439,7 +423,6 @@ font-weight: bold;
    <zorder>centralDuvidasButton</zorder>
    <zorder>grupoButton</zorder>
    <zorder>agendaButton</zorder>
-   <zorder>line_login</zorder>
    <zorder>grupoLabel</zorder>
    <zorder>duvidaLabel</zorder>
    <zorder>centralDLabel</zorder>

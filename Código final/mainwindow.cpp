@@ -7,12 +7,10 @@
 // ============================================================================
 // INCLUDES DAS JANELAS DO SISTEMA
 // ============================================================================
-#include "consultardisponibilidadedialog.h"
-#include "realizarreservadialog.h"
-#include "listarreservadialog.h"
 #include "forumdialog.h"
 #include "agendaacademicadialog.h"
-#include "duvidasdialog.h"  // ✅ NOVO: Sistema de Dúvidas
+#include "duvidasdialog.h"
+#include "grupoestudodialog.h"  // ✅ NOVO: Sistema de Grupos de Estudo
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -45,25 +43,24 @@ void MainWindow::on_centralDuvidasButton_clicked()
     dialog.exec();
 }
 
-// --------------- SLOT: Botão Dúvidas (NOVO!) ----------------------
-// Abre o sistema de dúvidas por disciplina
-//-------------------------------------------------------------------
+// SLOT: Botão Dúvidas (Sistema de perguntas/respostas por disciplina)
 void MainWindow::on_duvidasButton_clicked()
 {
     DuvidasDialog dialog(this, loggedInUsername);
     dialog.exec();
 }
 
-// SLOT: Botão Listar Reservas (Grupos)
+// ============================================================================
+// SLOT: Botão Grupos de Estudo (ATUALIZADO)
+// Abre o sistema completo de grupos de estudo com chat
+// ============================================================================
 void MainWindow::on_grupoButton_clicked()
 {
-    ListarReservaDialog dialog(this);
+    GrupoEstudoDialog dialog(this, loggedInUsername);
     dialog.exec();
 }
 
-// --------------- SLOT: Botão Agenda Acadêmica ----------------------
-// Abre a janela de Agenda Acadêmica passando o usuário logado
-//--------------------------------------------------------------------
+// SLOT: Botão Agenda Acadêmica
 void MainWindow::on_agendaButton_clicked()
 {
     // Cria e exibe a janela de Agenda Acadêmica

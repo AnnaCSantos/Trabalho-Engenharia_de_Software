@@ -44,7 +44,7 @@ private slots:
     // Abre a Central de Dúvidas (Fórum)
     void on_centralDuvidasButton_clicked();
 
-    // Abre a janela de Grupos de Estudo (Listar Reservas)
+    // Abre a janela de Grupos de Estudo
     void on_grupoButton_clicked();
 
     // Abre a janela de Dúvidas (Sistema de perguntas/respostas)
