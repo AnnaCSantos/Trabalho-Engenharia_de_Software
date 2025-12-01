@@ -101,7 +101,6 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
     QSqlQuery query(dbConnection);
 
     // Tabela de Matérias
-    query.exec("DROP TABLE IF EXISTS Materias");
     query.exec(
         "CREATE TABLE IF NOT EXISTS Materias ("
         "id_materia INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -133,7 +132,7 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
         "id_usuario INTEGER NOT NULL, "
         "data_entrada DATETIME DEFAULT CURRENT_TIMESTAMP, "
         "FOREIGN KEY (id_sala) REFERENCES Salas_Estudo(id_sala), "
-        "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario), "
+        "FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario), "
         "UNIQUE(id_sala, id_usuario))"
         );
 
@@ -146,7 +145,7 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
         "mensagem TEXT NOT NULL, "
         "data_envio DATETIME DEFAULT CURRENT_TIMESTAMP, "
         "FOREIGN KEY (id_sala) REFERENCES Salas_Estudo(id_sala), "
-        "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario))"
+        "FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario))"
         );
 
     // Popula matérias de exemplo (se não existirem)
@@ -343,7 +342,7 @@ void GrupoEstudoDialog::on_confirmarCriarButton_clicked()
 int GrupoEstudoDialog::getIdUsuario(const QString& username)
 {
     QSqlQuery query(dbConnection);
-    query.prepare("SELECT id_usuario FROM Usuario WHERE usuario = ?");
+    query.prepare("SELECT id_usuario FROM USUARIOS WHERE usuario = ?");
     query.addBindValue(username);
 
     if (query.exec() && query.next()) {
@@ -363,7 +362,9 @@ void GrupoEstudoDialog::mostrarTela(const QString& tela)
         ui->stackedWidget->setCurrentIndex(1);
         carregarSalasPublicas();
     } else if (tela == "criar") {
+        popularComboMateriasCriacao();
         ui->stackedWidget->setCurrentIndex(2);
+
     }
 }
 
@@ -419,7 +420,6 @@ void GrupoEstudoDialog::carregarMateriasDaCategoria(const QString& categoria)
 
     layout->addStretch();
 }
-
 QPushButton* GrupoEstudoDialog::criarBotaoMateria(int idMateria, const QString& nome,
                                                   const QString& icone, const QString& cor)
 {
@@ -428,15 +428,10 @@ QPushButton* GrupoEstudoDialog::criarBotaoMateria(int idMateria, const QString& 
     btn->setMinimumHeight(70);
     btn->setCursor(Qt::PointingHandCursor);
 
-    QString corBase = cor;
-    QString corHover = corBase;
-
-    // Efeito simples de hover escurecendo levemente
-    if (corHover.startsWith("#FF")) {
-        corHover.replace(0, 3, "#DD");
-    } else if (corHover.contains("FF")) {
-        corHover.replace("FF", "DD");
-    }
+    // Lógica correta para escurecer a cor no Hover
+    QColor corObj(cor);
+    QString corBase = corObj.name();
+    QString corHover = corObj.darker(120).name(); // Escurece 20%
 
     btn->setStyleSheet(
         QString("QPushButton {"
@@ -450,7 +445,7 @@ QPushButton* GrupoEstudoDialog::criarBotaoMateria(int idMateria, const QString& 
                 "   text-align: left;"
                 "}"
                 "QPushButton:hover {"
-                "   background-color: %2;"
+                "   background-color: %2;" // Usa a cor calculada
                 "   transform: scale(1.02);"
                 "}").arg(corBase).arg(corHover)
         );
@@ -552,7 +547,7 @@ void GrupoEstudoDialog::carregarSalasPublicas()
         QString tipo = query.value(3).toString();
         int maxParticipantes = query.value(4).toInt();
         int numParticipantes = query.value(5).toInt();
-
+        qDebug() << "SALA ENCONTRADA -> ID:" << idSala << " | NOME:" << nomeSala << " | CODIGO:" << codigoSala;
         QFrame *card = criarCardSala(idSala, codigoSala, nomeSala, tipo,
                                      numParticipantes, maxParticipantes);
         layout->addWidget(card);
@@ -566,14 +561,16 @@ QFrame* GrupoEstudoDialog::criarCardSala(int idSala, const QString& codigoSala,
                                          int numParticipantes, int maxParticipantes)
 {
     QFrame *card = new QFrame();
+    card->setObjectName(QString::number(idSala));
     card->setFrameShape(QFrame::StyledPanel);
     card->setMinimumHeight(100);
+    card->setMaximumHeight(150); // Limitação na altura máxima
     card->setStyleSheet(
         "QFrame {"
         "   background-color: #423738;"
         "   border-left: 5px solid #F4B315;"
         "   border-radius: 10px;"
-        "   padding: 15px;"
+        "   padding: 10px;"
         "   margin: 5px;"
         "}"
         "QFrame:hover {"
@@ -582,12 +579,32 @@ QFrame* GrupoEstudoDialog::criarCardSala(int idSala, const QString& codigoSala,
         );
 
     QHBoxLayout *mainLayout = new QHBoxLayout(card);
+    mainLayout->setSpacing(10);
+    mainLayout->setContentsMargins(15, 15, 15, 15);
 
-    // Informações
-    QVBoxLayout *infoLayout = new QVBoxLayout();
+    // --- CONTAINER PARA OS TEXTOS ---
+    QWidget *textContainer = new QWidget();
+    textContainer->setStyleSheet("background: transparent; border: none;");
 
-    QLabel *nomeLabel = new QLabel(nomeSala);
-    nomeLabel->setStyleSheet("font-size: 16px; font-weight: bold; color: #F4B315;");
+    QVBoxLayout *infoLayout = new QVBoxLayout(textContainer);
+    infoLayout->setContentsMargins(0, 0, 0, 0);
+    infoLayout->setSpacing(8); // MUDANÇA: Aumentei o espaçamento
+
+    QLabel *nomeLabel = new QLabel(nomeSala.isEmpty() ? "Sem Nome" : nomeSala);
+    nomeLabel->setStyleSheet(
+        "QLabel {"
+        "   font-size: 18px;"
+        "   font-weight: bold;"
+        "   color: #F4B315;"
+        "   background: transparent;"
+        "   border: none;"
+        "   padding: 0px;"
+        "   margin: 0px;"
+        "}"
+        );
+    nomeLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    nomeLabel->setWordWrap(true);
+    nomeLabel->setMinimumHeight(25);
 
     QLabel *infoLabel = new QLabel(
         QString("👥 %1/%2 participantes | 🔑 %3")
@@ -595,21 +612,32 @@ QFrame* GrupoEstudoDialog::criarCardSala(int idSala, const QString& codigoSala,
             .arg(maxParticipantes)
             .arg(codigoSala)
         );
-    infoLabel->setStyleSheet("font-size: 12px; color: #D3AF35;");
+    infoLabel->setStyleSheet(
+        "QLabel {"
+        "   font-size: 12px;"
+        "   color: #D3AF35;"
+        "   background: transparent;"
+        "   border: none;"
+        "   padding: 0px;"
+        "   margin: 0px;"
+        "}"
+        );
+    infoLabel->setMinimumHeight(20);
 
     infoLayout->addWidget(nomeLabel);
     infoLayout->addWidget(infoLabel);
+    infoLayout->addStretch();
 
     // Botão Entrar
     QPushButton *entrarBtn = new QPushButton("🔥 Entrar");
-    entrarBtn->setMinimumWidth(100);
+    entrarBtn->setCursor(Qt::PointingHandCursor);
+    entrarBtn->setFixedSize(100, 40);
     entrarBtn->setStyleSheet(
         "QPushButton {"
         "   background-color: #F4B315;"
         "   color: #1A161A;"
         "   border: none;"
         "   border-radius: 8px;"
-        "   padding: 10px 20px;"
         "   font-weight: bold;"
         "}"
         "QPushButton:hover { background-color: #D3AF35; }"
@@ -619,12 +647,11 @@ QFrame* GrupoEstudoDialog::criarCardSala(int idSala, const QString& codigoSala,
         onSalaClicked(idSala);
     });
 
-    mainLayout->addLayout(infoLayout, 1);
-    mainLayout->addWidget(entrarBtn);
+    mainLayout->addWidget(textContainer, 1);
+    mainLayout->addWidget(entrarBtn, 0, Qt::AlignVCenter); // Alinhamento vertical
 
     return card;
 }
-
 void GrupoEstudoDialog::onSalaClicked(int idSala)
 {
     // Busca informações da sala
@@ -770,4 +797,20 @@ bool GrupoEstudoDialog::validarCriacaoSala()
     }
 
     return true;
+}
+
+void GrupoEstudoDialog::popularComboMateriasCriacao()
+{
+    ui->materiaComboBox->clear(); // Limpa antes de encher
+
+    QSqlQuery query(dbConnection);
+    // Busca todas as matérias ordenadas por nome
+    query.exec("SELECT id_materia, nome FROM Materias ORDER BY nome ASC");
+
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString nome = query.value(1).toString();
+
+        ui->materiaComboBox->addItem(nome, id);
+    }
 }
