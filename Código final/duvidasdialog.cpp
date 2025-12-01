@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QSqlRecord>
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QComboBox>
@@ -25,109 +26,23 @@ DuvidasDialog::DuvidasDialog(QWidget *parent, const QString& username)
     , loggedInUsername(username)
 {
     ui->setupUi(this);
+    qDebug() << ">>> PASTA DO BANCO: " << QCoreApplication::applicationDirPath();
     setWindowTitle("📚 Dúvidas EducaUTFPR");
     resize(1200, 800);
 
     setupDatabase();
+
+    //Garante com que os dados do bc estejam funcionando
+    garantirTabelaDisciplinas();
     criarTabelaDuvidas();
     criarTabelaRespostas();
     criarTabelaNotificacoes();
 
-    // Popula o filtro com todas as disciplinas da UTFPR - Engenharia de Computação
-    ui->filtroComboBox->addItem("📋 Todas as Disciplinas");
+    // 2. Popula o filtro principal usando dados do banco
+    popularComboDisciplinas(ui->filtroComboBox, true);
 
-    // 1º Período
-    ui->filtroComboBox->addItem("📐 Cálculo Diferencial e Integral 1");
-    ui->filtroComboBox->addItem("✏️ Desenho Técnico");
-    ui->filtroComboBox->addItem("💡 Introdução à Engenharia de Computação");
-    ui->filtroComboBox->addItem("💻 Fundamentos de Programação 1");
-    ui->filtroComboBox->addItem("📏 Geometria Analítica");
-    ui->filtroComboBox->addItem("🧠 Introdução à Lógica para Computação");
-    ui->filtroComboBox->addItem("📝 Comunicação Linguística");
-    ui->filtroComboBox->addItem("⚡ Materiais e Equipamentos Elétricos");
-
-    // 2º Período
-    ui->filtroComboBox->addItem("📊 Álgebra Linear");
-    ui->filtroComboBox->addItem("📐 Cálculo Diferencial e Integral 2");
-    ui->filtroComboBox->addItem("🔌 Circuitos Digitais");
-    ui->filtroComboBox->addItem("💻 Fundamentos de Programação 2");
-    ui->filtroComboBox->addItem("⚛️ Física Teórica 1");
-    ui->filtroComboBox->addItem("🌍 Inglês Instrumental");
-    ui->filtroComboBox->addItem("📚 Metodologia de Pesquisa");
-    ui->filtroComboBox->addItem("🎯 Atividades Complementares");
-
-    // 3º Período
-    ui->filtroComboBox->addItem("🖥️ Arquitetura e Organização de Computadores");
-    ui->filtroComboBox->addItem("📐 Cálculo Diferencial e Integral 3");
-    ui->filtroComboBox->addItem("🌱 Ciências do Ambiente");
-    ui->filtroComboBox->addItem("📦 Estrutura de Dados 1");
-    ui->filtroComboBox->addItem("🔢 Equações Diferenciais Ordinárias");
-    ui->filtroComboBox->addItem("🧪 Física Experimental 1");
-    ui->filtroComboBox->addItem("⚛️ Física Teórica 2");
-    ui->filtroComboBox->addItem("🔣 Matemática Discreta");
-
-    // 4º Período
-    ui->filtroComboBox->addItem("🗄️ Banco de Dados");
-    ui->filtroComboBox->addItem("📦 Estrutura de Dados 2");
-    ui->filtroComboBox->addItem("🧪 Física Experimental 2");
-    ui->filtroComboBox->addItem("⚛️ Física Teórica 3");
-    ui->filtroComboBox->addItem("🎲 Programação Orientada a Objetos");
-    ui->filtroComboBox->addItem("🧪 Química Experimental");
-    ui->filtroComboBox->addItem("⚗️ Química Geral");
-    ui->filtroComboBox->addItem("📈 Análise de Sistemas Lineares");
-
-    // 5º Período
-    ui->filtroComboBox->addItem("🔢 Cálculo Numérico");
-    ui->filtroComboBox->addItem("📡 Comunicação de Dados");
-    ui->filtroComboBox->addItem("⚡ Análise de Circuitos Elétricos 1");
-    ui->filtroComboBox->addItem("📊 Probabilidade e Estatística");
-    ui->filtroComboBox->addItem("💾 Sistemas Operacionais");
-    ui->filtroComboBox->addItem("🔧 Sistemas Digitais");
-    ui->filtroComboBox->addItem("🧮 Teoria da Computação");
-    ui->filtroComboBox->addItem("🛠️ Oficina de Integração 1");
-
-    // 6º Período
-    ui->filtroComboBox->addItem("📝 Compiladores");
-    ui->filtroComboBox->addItem("🔌 Eletrônica A");
-    ui->filtroComboBox->addItem("🏗️ Engenharia de Software");
-    ui->filtroComboBox->addItem("🎛️ Fundamentos de Controle");
-    ui->filtroComboBox->addItem("📊 Processamento Digital de Sinais");
-    ui->filtroComboBox->addItem("🌐 Redes de Computadores");
-
-    // 7º Período
-    ui->filtroComboBox->addItem("🎮 Controle Digital");
-    ui->filtroComboBox->addItem("💼 Estágio Curricular Obrigatório");
-    ui->filtroComboBox->addItem("🔌 Eletrônica B");
-    ui->filtroComboBox->addItem("💡 Empreendedorismo");
-    ui->filtroComboBox->addItem("🔧 Lógica Reconfigurável");
-    ui->filtroComboBox->addItem("🤖 Sistemas Inteligentes 1");
-    ui->filtroComboBox->addItem("⚙️ Sistemas Microcontrolados");
-
-    // 8º Período
-    ui->filtroComboBox->addItem("🌐 Desenvolvimento de Aplicações Web");
-    ui->filtroComboBox->addItem("💰 Economia");
-    ui->filtroComboBox->addItem("📡 Instrumentação Eletrônica");
-    ui->filtroComboBox->addItem("🛠️ Oficina de Integração 2");
-    ui->filtroComboBox->addItem("☁️ Sistemas Distribuídos");
-    ui->filtroComboBox->addItem("🔧 Sistemas Embarcados");
-
-    // 9º Período
-    ui->filtroComboBox->addItem("🔐 Segurança e Auditoria de Sistemas");
-    ui->filtroComboBox->addItem("📄 Trabalho de Conclusão de Curso 1");
-
-    // 10º Período
-    ui->filtroComboBox->addItem("📄 Trabalho de Conclusão de Curso 2");
-
-    // Optativas
-    ui->filtroComboBox->addItem("🏃 Aptidão Física");
-    ui->filtroComboBox->addItem("👋 Libras 1");
-    ui->filtroComboBox->addItem("🌍 Meio Ambiente e Sociedade");
-    ui->filtroComboBox->addItem("💚 Qualidade de Vida");
-    ui->filtroComboBox->addItem("🤝 Relações Humanas e Liderança");
-
-    carregarDuvidas();
+    carregarDuvidas(); // Carrega duvidas que já estão armazenadas no banco de dados
     setupNavigationBar();
-
     connect(ui->filtroComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &DuvidasDialog::on_filtroComboBox_currentIndexChanged);
 }
@@ -145,25 +60,139 @@ void DuvidasDialog::setupDatabase()
     }
 }
 
+//Preenche a tabela de DIsciplinas
+void DuvidasDialog::garantirTabelaDisciplinas()
+{
+    QSqlQuery query(dbConnection);
+
+    // Cria a tabela
+    QString createTable =
+        "CREATE TABLE IF NOT EXISTS Disciplinas ("
+        "id_disciplina INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "nome TEXT UNIQUE NOT NULL"
+        ")";
+
+    if (!query.exec(createTable)) {
+        qDebug() << "Erro tabela Disciplinas:" << query.lastError().text();
+        return;
+    }
+
+    // Verifica se já tem dados
+    query.exec("SELECT COUNT(*) FROM Disciplinas");
+    if (query.next() && query.value(0).toInt() > 0) {
+        return; // Já tem dados, não faz nada
+    }
+
+    qDebug() << "Inserindo disciplinas iniciais no banco...";
+
+    // Função onde adiciona as disciplinas no banco de dados caso a tabela não seja encontrada
+    // OBservação: As devidas matérias JÁ ESTÃO INSERIDAS NO BANCO, essa função está sendo criada por segurança
+    QStringList materias;
+    materias
+        // 1º Período
+        << "📐 Cálculo Diferencial e Integral 1" << "✏️ Desenho Técnico"
+        << "💡 Introdução à Engenharia de Computação" << "💻 Fundamentos de Programação 1"
+        << "📏 Geometria Analítica" << "🧠 Introdução à Lógica para Computação"
+        << "📝 Comunicação Linguística" << "⚡ Materiais e Equipamentos Elétricos"
+        // 2º Período
+        << "📊 Álgebra Linear" << "📐 Cálculo Diferencial e Integral 2"
+        << "🔌 Circuitos Digitais" << "💻 Fundamentos de Programação 2"
+        << "⚛️ Física Teórica 1" << "🌍 Inglês Instrumental"
+        << "📚 Metodologia de Pesquisa" << "🎯 Atividades Complementares"
+        // 3º Período
+        << "🖥️ Arquitetura e Organização de Computadores" << "📐 Cálculo Diferencial e Integral 3"
+        << "🌱 Ciências do Ambiente" << "📦 Estrutura de Dados 1"
+        << "🔢 Equações Diferenciais Ordinárias" << "🧪 Física Experimental 1"
+        << "⚛️ Física Teórica 2" << "🔣 Matemática Discreta"
+        // 4º Período
+        << "🗄️ Banco de Dados" << "📦 Estrutura de Dados 2"
+        << "🧪 Física Experimental 2" << "⚛️ Física Teórica 3"
+        << "🎲 Programação Orientada a Objetos" << "🧪 Química Experimental"
+        << "⚗️ Química Geral" << "📈 Análise de Sistemas Lineares"
+        // 5º Período
+        << "🔢 Cálculo Numérico" << "📡 Comunicação de Dados"
+        << "⚡ Análise de Circuitos Elétricos 1" << "📊 Probabilidade e Estatística"
+        << "💾 Sistemas Operacionais" << "🔧 Sistemas Digitais"
+        << "🧮 Teoria da Computação" << "🛠️ Oficina de Integração 1"
+        // 6º Período
+        << "📝 Compiladores" << "🔌 Eletrônica A" << "🏗️ Engenharia de Software"
+        << "🎛️ Fundamentos de Controle" << "📊 Processamento Digital de Sinais"
+        << "🌐 Redes de Computadores"
+        // 7º Período
+        << "🎮 Controle Digital" << "💼 Estágio Curricular Obrigatório"
+        << "🔌 Eletrônica B" << "💡 Empreendedorismo"
+        << "🔧 Lógica Reconfigurável" << "🤖 Sistemas Inteligentes 1"
+        << "⚙️ Sistemas Microcontrolados"
+        // 8º Período
+        << "🌐 Desenvolvimento de Aplicações Web" << "💰 Economia"
+        << "📡 Instrumentação Eletrônica" << "🛠️ Oficina de Integração 2"
+        << "☁️ Sistemas Distribuídos" << "🔧 Sistemas Embarcados"
+        // 9º Período
+        << "🔐 Segurança e Auditoria de Sistemas" << "📄 Trabalho de Conclusão de Curso 1"
+        // 10º Período
+        << "📄 Trabalho de Conclusão de Curso 2"
+        // Optativas
+        << "🏃 Aptidão Física" << "👋 Libras 1"
+        << "🌍 Meio Ambiente e Sociedade" << "💚 Qualidade de Vida"
+        << "🤝 Relações Humanas e Liderança";
+
+    dbConnection.transaction();
+    QSqlRecord registro = dbConnection.record("Duvidas");
+    qDebug() << "=== COLUNAS QUE O QT ESTÁ VENDO ===";
+    for(int i=0; i < registro.count(); ++i) {
+        qDebug() << "Coluna" << i << ":" << registro.fieldName(i);
+    }
+    qDebug() << "==================================";
+    QSqlQuery insertQuery(dbConnection);
+    insertQuery.prepare("INSERT INTO Disciplinas (nome) VALUES (?)");
+
+    for (const QString &materia : materias) {
+        insertQuery.addBindValue(materia);
+        insertQuery.exec();
+    }
+    dbConnection.commit();
+}
+
+// --- NOVA FUNÇÃO: Popula ComboBox ---
+void DuvidasDialog::popularComboDisciplinas(QComboBox *combo, bool incluirOpcaoTodas)
+{
+    combo->clear();
+
+    if (incluirOpcaoTodas) {
+        combo->addItem("📋 Todas as Disciplinas", 0); // ID 0 = Todas
+    }
+
+    QSqlQuery query(dbConnection);
+    query.exec("SELECT id_disciplina, nome FROM Disciplinas ORDER BY nome ASC");
+
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString nome = query.value(1).toString();
+
+        // Texto visível = Nome, Dado oculto = ID
+        combo->addItem(nome, id);
+    }
+}
+
 void DuvidasDialog::criarTabelaDuvidas()
 {
     QSqlQuery query(dbConnection);
+    // AGORA USA id_disciplina (INTEGER) em vez de texto
     QString createTableSQL =
         "CREATE TABLE IF NOT EXISTS Duvidas ("
         "id_duvida INTEGER PRIMARY KEY AUTOINCREMENT, "
         "id_usuario INTEGER NOT NULL, "
-        "disciplina TEXT NOT NULL, "
+        "id_disciplina INTEGER NOT NULL, "
         "titulo TEXT NOT NULL, "
         "descricao TEXT NOT NULL, "
         "imagem_path TEXT, "
         "status TEXT DEFAULT 'Aberta', "
         "data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP, "
-        "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario))";
+        "FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario), "
+        "FOREIGN KEY (id_disciplina) REFERENCES Disciplinas(id_disciplina))";
 
     if (!query.exec(createTableSQL)) {
         qDebug() << "Erro ao criar tabela Duvidas:" << query.lastError().text();
-    } else {
-        qDebug() << "Tabela Duvidas verificada/criada com sucesso!";
     }
 }
 
@@ -178,7 +207,7 @@ void DuvidasDialog::criarTabelaRespostas()
         "resposta TEXT NOT NULL, "
         "data_resposta DATETIME DEFAULT CURRENT_TIMESTAMP, "
         "FOREIGN KEY (id_duvida) REFERENCES Duvidas(id_duvida), "
-        "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario))";
+        "FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario))";
 
     if (!query.exec(createTableSQL)) {
         qDebug() << "Erro ao criar tabela Respostas_Duvidas:" << query.lastError().text();
@@ -196,7 +225,7 @@ void DuvidasDialog::criarTabelaNotificacoes()
         "mensagem TEXT NOT NULL, "
         "lida INTEGER DEFAULT 0, "
         "data_notificacao DATETIME DEFAULT CURRENT_TIMESTAMP, "
-        "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario), "
+        "FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario), "
         "FOREIGN KEY (id_duvida) REFERENCES Duvidas(id_duvida))";
 
     if (!query.exec(createTableSQL)) {
@@ -207,7 +236,7 @@ void DuvidasDialog::criarTabelaNotificacoes()
 int DuvidasDialog::getIdUsuario(const QString& username)
 {
     QSqlQuery query(dbConnection);
-    query.prepare("SELECT id_usuario FROM Usuario WHERE usuario = ?");
+    query.prepare("SELECT id_usuario FROM USUARIOS WHERE usuario = ?");
     query.addBindValue(username);
 
     if (query.exec() && query.next()) {
@@ -231,6 +260,8 @@ int DuvidasDialog::contarNotificacoesNaoLidas()
 
 void DuvidasDialog::carregarDuvidas(const QString& filtro)
 {
+    Q_UNUSED(filtro); // Não usamos mais o texto, usamos o ID do combo
+
     QWidget *containerWidget = ui->scrollArea->widget();
 
     QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(containerWidget->layout());
@@ -247,31 +278,21 @@ void DuvidasDialog::carregarDuvidas(const QString& filtro)
         delete item;
     }
 
-    int idUsuario = getIdUsuario(loggedInUsername);
-    if (idUsuario == -1) {
-        qDebug() << "Usuário não encontrado!";
-        return;
-    }
-
+    // Faz o JOIN para pegar o nome da disciplina baseado no ID
     QString queryString =
-        "SELECT d.id_duvida, d.disciplina, d.titulo, d.descricao, d.imagem_path, "
+        "SELECT d.id_duvida, d.titulo, d.descricao, d.imagem_path, "
         "d.status, d.data_criacao, u.nome, u.Sobrenome, "
+        "disc.nome as nome_disciplina, "
         "(SELECT COUNT(*) FROM Respostas_Duvidas WHERE id_duvida = d.id_duvida) as num_respostas "
         "FROM Duvidas d "
-        "JOIN Usuario u ON d.id_usuario = u.id_usuario ";
+        "JOIN USUARIOS u ON d.id_usuario = u.id_usuario "
+        "JOIN Disciplinas disc ON d.id_disciplina = disc.id_disciplina ";
 
-    QString filtroAtual = ui->filtroComboBox->currentText();
+    // Filtra pelo ID atual do ComboBox
+    int idFiltro = ui->filtroComboBox->currentData().toInt();
 
-    if (!filtroAtual.contains("Todas")) {
-        // Remove o emoji do início (tudo antes do primeiro espaço)
-        QString disciplinaLimpa = filtroAtual;
-        int primeiroEspaco = disciplinaLimpa.indexOf(' ');
-        if (primeiroEspaco != -1) {
-            disciplinaLimpa = disciplinaLimpa.mid(primeiroEspaco + 1).trimmed();
-        }
-
-        qDebug() << "Filtrando por disciplina:" << disciplinaLimpa;
-        queryString += "WHERE d.disciplina = '" + disciplinaLimpa + "' ";
+    if (idFiltro > 0) { // 0 é "Todas"
+        queryString += "WHERE d.id_disciplina = " + QString::number(idFiltro) + " ";
     }
 
     queryString += "ORDER BY d.data_criacao DESC";
@@ -285,7 +306,8 @@ void DuvidasDialog::carregarDuvidas(const QString& filtro)
     int count = 0;
     while (query.next()) {
         int id = query.value("id_duvida").toInt();
-        QString disciplina = query.value("disciplina").toString();
+        // Pega o nome vindo do JOIN
+        QString disciplina = query.value("nome_disciplina").toString();
         QString titulo = query.value("titulo").toString();
         QString descricao = query.value("descricao").toString();
         QString imagemPath = query.value("imagem_path").toString();
@@ -305,19 +327,14 @@ void DuvidasDialog::carregarDuvidas(const QString& filtro)
         QLabel *emptyLabel = new QLabel("🔍 Nenhuma dúvida encontrada.\nClique em '➕ Nova Dúvida' para adicionar!");
         emptyLabel->setAlignment(Qt::AlignCenter);
         emptyLabel->setStyleSheet(
-            "color: #8E6915; "
-            "font-size: 16px; "
-            "margin: 50px; "
-            "padding: 30px; "
-            "background-color: #423738; "
-            "border-radius: 10px;"
+            "color: #8E6915; font-size: 16px; margin: 50px; padding: 30px; "
+            "background-color: #423738; border-radius: 10px;"
             );
         layout->addWidget(emptyLabel);
     }
 
     layout->addStretch();
 
-    // Atualiza contador de notificações
     int notificacoes = contarNotificacoesNaoLidas();
     if (notificacoes > 0) {
         ui->tituloLabel->setText(QString("📚 Dúvidas EducaUTFPR 🔔 (%1)").arg(notificacoes));
@@ -367,7 +384,7 @@ QFrame* DuvidasDialog::criarCardDuvida(int id, const QString& disciplina, const 
     QHBoxLayout *mainLayout = new QHBoxLayout(card);
     mainLayout->setSpacing(15);
 
-    // Coluna 1: Ícone da disciplina
+    // Coluna 1: Ícone
     QVBoxLayout *iconCol = new QVBoxLayout();
     iconCol->setAlignment(Qt::AlignTop);
 
@@ -384,7 +401,7 @@ QFrame* DuvidasDialog::criarCardDuvida(int id, const QString& disciplina, const 
     iconCol->addWidget(iconeLabel);
     iconCol->addWidget(discLabel);
 
-    // Coluna 2: Informações
+    // Coluna 2: Info
     QVBoxLayout *infoCol = new QVBoxLayout();
 
     QLabel *tituloLabel = new QLabel(titulo);
@@ -403,7 +420,6 @@ QFrame* DuvidasDialog::criarCardDuvida(int id, const QString& disciplina, const 
         descLabel->setText(descricao.left(97) + "...");
     }
 
-    // Miniatura da imagem se existir
     if (!imagemPath.isEmpty()) {
         QLabel *imgLabel = new QLabel();
         QPixmap pixmap(imagemPath);
@@ -419,7 +435,7 @@ QFrame* DuvidasDialog::criarCardDuvida(int id, const QString& disciplina, const 
     infoCol->addWidget(descLabel);
     infoCol->addStretch();
 
-    // Coluna 3: Status e Data
+    // Coluna 3: Status
     QVBoxLayout *statusCol = new QVBoxLayout();
     statusCol->setAlignment(Qt::AlignTop | Qt::AlignRight);
 
@@ -495,95 +511,8 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
     QComboBox *discCombo = new QComboBox();
     discCombo->setMinimumHeight(40);
 
-    // Adiciona todas as disciplinas (sem emoji aqui)
-    // 1º Período
-    discCombo->addItem("Cálculo Diferencial e Integral 1");
-    discCombo->addItem("Desenho Técnico");
-    discCombo->addItem("Introdução à Engenharia de Computação");
-    discCombo->addItem("Fundamentos de Programação 1");
-    discCombo->addItem("Geometria Analítica");
-    discCombo->addItem("Introdução à Lógica para Computação");
-    discCombo->addItem("Comunicação Linguística");
-    discCombo->addItem("Materiais e Equipamentos Elétricos");
-
-    // 2º Período
-    discCombo->addItem("Álgebra Linear");
-    discCombo->addItem("Cálculo Diferencial e Integral 2");
-    discCombo->addItem("Circuitos Digitais");
-    discCombo->addItem("Fundamentos de Programação 2");
-    discCombo->addItem("Física Teórica 1");
-    discCombo->addItem("Inglês Instrumental");
-    discCombo->addItem("Metodologia de Pesquisa");
-    discCombo->addItem("Atividades Complementares");
-
-    // 3º Período
-    discCombo->addItem("Arquitetura e Organização de Computadores");
-    discCombo->addItem("Cálculo Diferencial e Integral 3");
-    discCombo->addItem("Ciências do Ambiente");
-    discCombo->addItem("Estrutura de Dados 1");
-    discCombo->addItem("Equações Diferenciais Ordinárias");
-    discCombo->addItem("Física Experimental 1");
-    discCombo->addItem("Física Teórica 2");
-    discCombo->addItem("Matemática Discreta");
-
-    // 4º Período
-    discCombo->addItem("Banco de Dados");
-    discCombo->addItem("Estrutura de Dados 2");
-    discCombo->addItem("Física Experimental 2");
-    discCombo->addItem("Física Teórica 3");
-    discCombo->addItem("Programação Orientada a Objetos");
-    discCombo->addItem("Química Experimental");
-    discCombo->addItem("Química Geral");
-    discCombo->addItem("Análise de Sistemas Lineares");
-
-    // 5º Período
-    discCombo->addItem("Cálculo Numérico");
-    discCombo->addItem("Comunicação de Dados");
-    discCombo->addItem("Análise de Circuitos Elétricos 1");
-    discCombo->addItem("Probabilidade e Estatística");
-    discCombo->addItem("Sistemas Operacionais");
-    discCombo->addItem("Sistemas Digitais");
-    discCombo->addItem("Teoria da Computação");
-    discCombo->addItem("Oficina de Integração 1");
-
-    // 6º Período
-    discCombo->addItem("Compiladores");
-    discCombo->addItem("Eletrônica A");
-    discCombo->addItem("Engenharia de Software");
-    discCombo->addItem("Fundamentos de Controle");
-    discCombo->addItem("Processamento Digital de Sinais");
-    discCombo->addItem("Redes de Computadores");
-
-    // 7º Período
-    discCombo->addItem("Controle Digital");
-    discCombo->addItem("Estágio Curricular Obrigatório");
-    discCombo->addItem("Eletrônica B");
-    discCombo->addItem("Empreendedorismo");
-    discCombo->addItem("Lógica Reconfigurável");
-    discCombo->addItem("Sistemas Inteligentes 1");
-    discCombo->addItem("Sistemas Microcontrolados");
-
-    // 8º Período
-    discCombo->addItem("Desenvolvimento de Aplicações Web");
-    discCombo->addItem("Economia");
-    discCombo->addItem("Instrumentação Eletrônica");
-    discCombo->addItem("Oficina de Integração 2");
-    discCombo->addItem("Sistemas Distribuídos");
-    discCombo->addItem("Sistemas Embarcados");
-
-    // 9º Período
-    discCombo->addItem("Segurança e Auditoria de Sistemas");
-    discCombo->addItem("Trabalho de Conclusão de Curso 1");
-
-    // 10º Período
-    discCombo->addItem("Trabalho de Conclusão de Curso 2");
-
-    // Optativas
-    discCombo->addItem("Aptidão Física");
-    discCombo->addItem("Libras 1");
-    discCombo->addItem("Meio Ambiente e Sociedade");
-    discCombo->addItem("Qualidade de Vida");
-    discCombo->addItem("Relações Humanas e Liderança");
+    // Carrega do banco (SEM a opção "Todas")
+    popularComboDisciplinas(discCombo, false);
 
     QLabel *tituloLabel = new QLabel("📝 Título:");
     QLineEdit *tituloEdit = new QLineEdit();
@@ -600,13 +529,23 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
     QLabel *imagemPathLabel = new QLabel("Nenhuma imagem selecionada");
     imagemPathLabel->setStyleSheet("color: #8E6915; font-size: 11px;");
 
+    // Variável 'imagemPath' precisa ser capturada pelo lambda depois
+    // Usamos um ponteiro inteligente ou uma string estática na classe,
+    // mas aqui vamos usar uma variável local e capturá-la por referência no lambda
+    // ATENÇÃO: QDialog::exec() é bloqueante, então a referência é segura aqui.
     QString imagemPath;
+    // OBS: Como imagemPath é local, precisamos tomar cuidado.
+    // O jeito mais seguro no Qt moderno é capturar o ponteiro do label para atualizar o texto.
 
-    connect(selecionarImagemBtn, &QPushButton::clicked, [&imagemPath, imagemPathLabel]() {
+    // Hack para a string persistir: Vamos usar property do botão ou label
+    selecionarImagemBtn->setProperty("path", "");
+
+    connect(selecionarImagemBtn, &QPushButton::clicked, [=, &imagemPath]() {
+        // Nota: &imagemPath funciona aqui porque o dialog.exec() bloqueia o escopo
         QString path = QFileDialog::getOpenFileName(nullptr, "Selecionar Imagem", "",
                                                     "Imagens (*.png *.jpg *.jpeg *.bmp)");
         if (!path.isEmpty()) {
-            imagemPath = path;
+            imagemPath = path; // Atualiza a variável local
             imagemPathLabel->setText("✅ " + QFileInfo(path).fileName());
         }
     });
@@ -648,10 +587,15 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
 
     connect(cancelarBtn, &QPushButton::clicked, dialog, &QDialog::reject);
 
+    // CORREÇÃO DOS ERROS DE ESCOPO:
+    // Capturamos as variáveis locais necessárias (tituloEdit, descEdit, discCombo) por valor (=)
+    // imagemPath capturamos por referência (&) pois ela é modificada pelo outro botão
     connect(salvarBtn, &QPushButton::clicked, [=, &imagemPath]() {
         QString titulo = tituloEdit->text().trimmed();
-        QString disciplina = discCombo->currentText();
         QString descricao = descEdit->toPlainText().trimmed();
+
+        // Pega o ID da disciplina (UserData)
+        int idDisciplina = discCombo->currentData().toInt();
 
         if (titulo.isEmpty() || descricao.isEmpty()) {
             QMessageBox::warning(dialog, "⚠️ Campos Obrigatórios",
@@ -661,33 +605,22 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
 
         int idUsuario = getIdUsuario(loggedInUsername);
 
-        qDebug() << "=== SALVANDO DÚVIDA ===";
-        qDebug() << "ID Usuário:" << idUsuario;
-        qDebug() << "Disciplina:" << disciplina;
-        qDebug() << "Título:" << titulo;
-        qDebug() << "Descrição:" << descricao;
-        qDebug() << "Imagem:" << imagemPath;
-
         QSqlQuery insertQuery(dbConnection);
         insertQuery.prepare(
-            "INSERT INTO Duvidas (id_usuario, disciplina, titulo, descricao, imagem_path) "
+            "INSERT INTO Duvidas (id_usuario, id_disciplina, titulo, descricao, imagem_path) "
             "VALUES (?, ?, ?, ?, ?)"
             );
         insertQuery.addBindValue(idUsuario);
-        insertQuery.addBindValue(disciplina);
+        insertQuery.addBindValue(idDisciplina); // Salva o ID
         insertQuery.addBindValue(titulo);
         insertQuery.addBindValue(descricao);
         insertQuery.addBindValue(imagemPath.isEmpty() ? QVariant() : imagemPath);
 
         if (insertQuery.exec()) {
-            int idDuvida = insertQuery.lastInsertId().toInt();
-            qDebug() << "✅ Dúvida salva com sucesso! ID:" << idDuvida;
-
             QMessageBox::information(dialog, "✅ Sucesso", "Dúvida adicionada com sucesso!");
             dialog->accept();
-            carregarDuvidas(ui->filtroComboBox->currentText());
+            carregarDuvidas(); // Recarrega a lista principal
         } else {
-            qDebug() << "❌ Erro ao salvar:" << insertQuery.lastError().text();
             QMessageBox::critical(dialog, "❌ Erro",
                                   "Erro ao adicionar dúvida: " + insertQuery.lastError().text());
         }
@@ -699,12 +632,11 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
 void DuvidasDialog::on_filtroComboBox_currentIndexChanged(int index)
 {
     Q_UNUSED(index);
-    carregarDuvidas(ui->filtroComboBox->currentText());
+    carregarDuvidas();
 }
 
 void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
 {
-    // Cria dialog para mostrar detalhes e respostas
     QDialog *detalhes = new QDialog(this);
     detalhes->setWindowTitle("📖 Detalhes da Dúvida");
     detalhes->resize(800, 600);
@@ -717,13 +649,14 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
 
     QVBoxLayout *layout = new QVBoxLayout(detalhes);
 
-    // Busca os dados da dúvida
     QSqlQuery query(dbConnection);
+    // JOIN aqui também para pegar o nome da disciplina no detalhe
     query.prepare(
-        "SELECT d.titulo, d.descricao, d.disciplina, d.imagem_path, d.status, "
+        "SELECT d.titulo, d.descricao, disc.nome, d.imagem_path, d.status, "
         "d.data_criacao, u.nome, u.Sobrenome "
         "FROM Duvidas d "
-        "JOIN Usuario u ON d.id_usuario = u.id_usuario "
+        "JOIN USUARIOS u ON d.id_usuario = u.id_usuario "
+        "JOIN Disciplinas disc ON d.id_disciplina = disc.id_disciplina "
         "WHERE d.id_duvida = ?"
         );
     query.addBindValue(idDuvida);
@@ -731,18 +664,16 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
     if (query.exec() && query.next()) {
         QString titulo = query.value("titulo").toString();
         QString descricao = query.value("descricao").toString();
-        QString disciplina = query.value("disciplina").toString();
+        QString disciplina = query.value("nome").toString(); // Nome da disciplina
         QString imagemPath = query.value("imagem_path").toString();
         QString status = query.value("status").toString();
         QString dataCriacao = query.value("data_criacao").toString();
         QString nomeAutor = query.value("nome").toString() + " " + query.value("Sobrenome").toString();
 
-        // Título
         QLabel *tituloLabel = new QLabel("📚 " + titulo);
         tituloLabel->setStyleSheet("font-size: 20px; font-weight: bold; color: #F4B315;");
         tituloLabel->setWordWrap(true);
 
-        // Info
         QLabel *infoLabel = new QLabel(
             QString("👤 %1 | 📖 %2 | 📅 %3 | %4")
                 .arg(nomeAutor)
@@ -752,12 +683,10 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
             );
         infoLabel->setStyleSheet("color: #D3AF35; font-size: 12px;");
 
-        // Descrição
         QLabel *descLabel = new QLabel(descricao);
         descLabel->setWordWrap(true);
         descLabel->setStyleSheet("font-size: 14px; color: #F4B315; margin: 10px 0;");
 
-        // Imagem se existir
         if (!imagemPath.isEmpty()) {
             QLabel *imgLabel = new QLabel();
             QPixmap pixmap(imagemPath);
@@ -773,13 +702,11 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
         layout->addWidget(infoLabel);
         layout->addWidget(descLabel);
 
-        // Linha separadora
         QFrame *line = new QFrame();
         line->setFrameShape(QFrame::HLine);
         line->setStyleSheet("background-color: #F4B315;");
         layout->addWidget(line);
 
-        // Respostas
         QLabel *respostasTitle = new QLabel("💬 Respostas:");
         respostasTitle->setStyleSheet("font-size: 16px; font-weight: bold; color: #F4B315; margin-top: 10px;");
         layout->addWidget(respostasTitle);
@@ -789,12 +716,11 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
         QWidget *containerRespostas = new QWidget();
         QVBoxLayout *respostasLayout = new QVBoxLayout(containerRespostas);
 
-        // Busca respostas
         QSqlQuery respostasQuery(dbConnection);
         respostasQuery.prepare(
             "SELECT r.resposta, r.data_resposta, u.nome, u.Sobrenome "
             "FROM Respostas_Duvidas r "
-            "JOIN Usuario u ON r.id_usuario = u.id_usuario "
+            "JOIN USUARIOS u ON r.id_usuario = u.id_usuario "
             "WHERE r.id_duvida = ? "
             "ORDER BY r.data_resposta ASC"
             );
@@ -840,7 +766,6 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
         scrollRespostas->setWidget(containerRespostas);
         layout->addWidget(scrollRespostas);
 
-        // Campo para adicionar resposta
         QLabel *adicionarRespLabel = new QLabel("✍️ Adicionar sua resposta:");
         adicionarRespLabel->setStyleSheet("font-weight: bold; margin-top: 10px;");
         layout->addWidget(adicionarRespLabel);
@@ -875,15 +800,13 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
             insertResp.addBindValue(respostaTexto);
 
             if (insertResp.exec()) {
-                // Atualiza status da dúvida
                 QSqlQuery updateStatus(dbConnection);
                 updateStatus.prepare("UPDATE Duvidas SET status = 'Respondida' WHERE id_duvida = ?");
                 updateStatus.addBindValue(idDuvida);
                 updateStatus.exec();
 
-                // Notifica o autor
                 QSqlQuery nomeQuery(dbConnection);
-                nomeQuery.prepare("SELECT nome, Sobrenome FROM Usuario WHERE id_usuario = ?");
+                nomeQuery.prepare("SELECT nome, Sobrenome FROM USUARIOS WHERE id_usuario = ?");
                 nomeQuery.addBindValue(idUsuario);
                 if (nomeQuery.exec() && nomeQuery.next()) {
                     QString nomeCompleto = nomeQuery.value(0).toString() + " " +
@@ -893,7 +816,7 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
 
                 QMessageBox::information(detalhes, "✅ Sucesso", "Resposta enviada com sucesso!");
                 detalhes->accept();
-                carregarDuvidas(ui->filtroComboBox->currentText());
+                carregarDuvidas();
             } else {
                 QMessageBox::critical(detalhes, "❌ Erro",
                                       "Erro ao enviar resposta: " + insertResp.lastError().text());
@@ -909,7 +832,6 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
 
 void DuvidasDialog::notificarAutor(int idDuvida, const QString& nomeRespondente)
 {
-    // Busca o autor da dúvida
     QSqlQuery query(dbConnection);
     query.prepare("SELECT id_usuario FROM Duvidas WHERE id_duvida = ?");
     query.addBindValue(idDuvida);
@@ -917,7 +839,6 @@ void DuvidasDialog::notificarAutor(int idDuvida, const QString& nomeRespondente)
     if (query.exec() && query.next()) {
         int idAutor = query.value(0).toInt();
 
-        // Cria notificação
         QSqlQuery notifQuery(dbConnection);
         notifQuery.prepare(
             "INSERT INTO Notificacoes (id_usuario, id_duvida, mensagem) "
@@ -926,10 +847,7 @@ void DuvidasDialog::notificarAutor(int idDuvida, const QString& nomeRespondente)
         notifQuery.addBindValue(idAutor);
         notifQuery.addBindValue(idDuvida);
         notifQuery.addBindValue(nomeRespondente + " respondeu sua dúvida!");
-
-        if (notifQuery.exec()) {
-            qDebug() << "Notificação criada com sucesso!";
-        }
+        notifQuery.exec();
     }
 }
 
@@ -947,7 +865,6 @@ bool DuvidasDialog::eventFilter(QObject *obj, QEvent *event)
     }
 
     if (obj == ui->perfilButton && event->type() == QEvent::MouseButtonPress) {
-        // Abre a janela de perfil
         PerfilDialog *perfil = new PerfilDialog(this, loggedInUsername);
         perfil->exec();
         delete perfil;
