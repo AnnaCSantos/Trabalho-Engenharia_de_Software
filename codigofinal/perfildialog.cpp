@@ -18,6 +18,14 @@ PerfilDialog::PerfilDialog(QWidget *parent, const QString& username)
 
     setupDatabase();
 
+    // Remove a altura fixa e permite redimensionamento
+    this->setMinimumSize(800, 600);  // Tamanho mínimo razoável
+    this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX); // Remove limite máximo
+    this->resize(1000, 700); // Tamanho inicial confortável
+
+    // Permite redimensionar a janela
+    this->setSizeGripEnabled(true);
+    
     // Configura a UI inicial
     ui->usernameLabel->setText("@" + loggedInUsername);
     setModoEdicao(false); // Começa bloqueado
@@ -210,3 +218,4 @@ void PerfilDialog::on_escolherFotoButton_clicked()
         QMessageBox::information(this, "Foto", "Foto selecionada: " + fileName);
     }
 }
+
