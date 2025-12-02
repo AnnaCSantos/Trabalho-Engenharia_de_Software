@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChatMateria</class>
+ <widget class="QDialog" name="ChatMateria">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>💬 Chat - EducaUTFPR</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QDialog {
+    background-color: #1A161A;
+}
+
+QLabel {
+    color: #F4B315;
+}
+
+QScrollArea {
+    border: 2px solid #423738;
+    border-radius: 10px;
+    background-color: #1A161A;
+}
+
+QWidget#chatContainer {
+    background-color: #1A161A;
+}
+
+QLineEdit#mensagemEdit {
+    background-color: #423738;
+    color: #F4B315;
+    border: 2px solid #8E6915;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 14px;
+}
+
+QLineEdit#mensagemEdit:focus {
+    border-color: #F4B315;
+}
+
+QPushButton#enviarButton {
+    background-color: #F4B315;
+    color: #1A161A;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 25px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+QPushButton#enviarButton:hover {
+    background-color: #D3AF35;
+}
+
+QPushButton#sairButton {
+    background-color: #423738;
+    color: #F4B315;
+    border: 2px solid #F4B315;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: bold;
+}
+
+QPushButton#sairButton:hover {
+    background-color: #524447;
+}
+
+QLabel#tituloSalaLabel {
+    font-size: 20px;
+    font-weight: bold;
+    color: #F4B315;
+    padding: 10px;
+}
+
+QLabel#participantesLabel {
+    font-size: 12px;
+    color: #8E6915;
+    padding: 5px 10px;
+}
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <property name="leftMargin">
+    <number>15</number>
+   </property>
+   <property name="topMargin">
+    <number>15</number>
+   </property>
+   <property name="rightMargin">
+    <number>15</number>
+   </property>
+   <property name="bottomMargin">
+    <number>15</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="headerLayout">
+     <item>
+      <widget class="QLabel" name="tituloSalaLabel">
+       <property name="text">
+        <string>💬 Chat da Sala</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="sairButton">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>✕ Sair</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="participantesLabel">
+     <property name="text">
+      <string>👥 Carregando participantes...</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="styleSheet">
+      <string notr="true">background-color: #F4B315;</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>2</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="chatContainer">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>766</width>
+        <height>401</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="inputLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
+     <item>
+      <widget class="QLineEdit" name="mensagemEdit">
+       <property name="placeholderText">
+        <string>Digite sua mensagem...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="enviarButton">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>45</height>
+        </size>
+       </property>
+       <property name="text">
+        <string> Enviar</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
