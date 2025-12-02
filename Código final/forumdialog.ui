@@ -312,7 +312,7 @@ QLabel {
        <item>
         <widget class="QLabel" name="tituloLabel">
          <property name="text">
-          <string>Central de Dúvidas EducaUTFPR</string>
+          <string>Central de Dúvidas</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -388,19 +388,6 @@ QLabel {
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="novaDuvidaButton">
-         <property name="minimumSize">
-          <size>
-           <width>140</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>+ Nova Dúvida</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
      <item>
@@ -417,7 +404,7 @@ QLabel {
           <x>0</x>
           <y>0</y>
           <width>1150</width>
-          <height>491</height>
+          <height>502</height>
          </rect>
         </property>
        </widget>
