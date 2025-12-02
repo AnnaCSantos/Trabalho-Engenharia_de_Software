@@ -27,7 +27,7 @@ DuvidasDialog::DuvidasDialog(QWidget *parent, const QString& username)
 {
     ui->setupUi(this);
     qDebug() << ">>> PASTA DO BANCO: " << QCoreApplication::applicationDirPath();
-    setWindowTitle("📚 Dúvidas EducaUTFPR");
+    setWindowTitle("Dúvidas");
     resize(1200, 800);
 
     setupDatabase();
@@ -159,7 +159,7 @@ void DuvidasDialog::popularComboDisciplinas(QComboBox *combo, bool incluirOpcaoT
     combo->clear();
 
     if (incluirOpcaoTodas) {
-        combo->addItem("📋 Todas as Disciplinas", 0); // ID 0 = Todas
+        combo->addItem("Todas as Disciplinas", 0); // ID 0 = Todas
     }
 
     QSqlQuery query(dbConnection);
@@ -324,7 +324,7 @@ void DuvidasDialog::carregarDuvidas(const QString& filtro)
     }
 
     if (count == 0) {
-        QLabel *emptyLabel = new QLabel("🔍 Nenhuma dúvida encontrada.\nClique em '➕ Nova Dúvida' para adicionar!");
+        QLabel *emptyLabel = new QLabel("Nenhuma dúvida encontrada.\nClique em '➕ Nova Dúvida' para adicionar!");
         emptyLabel->setAlignment(Qt::AlignCenter);
         emptyLabel->setStyleSheet(
             "color: #8E6915; font-size: 16px; margin: 50px; padding: 30px; "
@@ -462,7 +462,7 @@ QFrame* DuvidasDialog::criarCardDuvida(int id, const QString& disciplina, const 
     QVBoxLayout *acoesCol = new QVBoxLayout();
     acoesCol->setAlignment(Qt::AlignTop | Qt::AlignRight);
 
-    QPushButton *verBtn = new QPushButton("👁️ Ver");
+    QPushButton *verBtn = new QPushButton("Ver");
     verBtn->setMinimumSize(80, 35);
     verBtn->setStyleSheet(
         "QPushButton { background-color: #F4B315; color: #1A161A; border: none; "
@@ -488,7 +488,7 @@ QFrame* DuvidasDialog::criarCardDuvida(int id, const QString& disciplina, const 
 void DuvidasDialog::on_adicionarDuvidaButton_clicked()
 {
     QDialog *dialog = new QDialog(this);
-    dialog->setWindowTitle("➕ Nova Dúvida");
+    dialog->setWindowTitle("Nova Dúvida");
     dialog->resize(700, 600);
 
     dialog->setStyleSheet(
@@ -504,7 +504,7 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
     QVBoxLayout *layout = new QVBoxLayout(dialog);
     layout->setSpacing(12);
 
-    QLabel *tituloDialog = new QLabel("📚 Adicionar Nova Dúvida");
+    QLabel *tituloDialog = new QLabel("Adicionar Nova Dúvida");
     tituloDialog->setStyleSheet("font-size: 20px; color: #F4B315; font-weight: bold; margin-bottom: 10px;");
 
     QLabel *discLabel = new QLabel("📖 Disciplina:");
@@ -514,17 +514,17 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
     // Carrega do banco (SEM a opção "Todas")
     popularComboDisciplinas(discCombo, false);
 
-    QLabel *tituloLabel = new QLabel("📝 Título:");
+    QLabel *tituloLabel = new QLabel("Título:");
     QLineEdit *tituloEdit = new QLineEdit();
     tituloEdit->setPlaceholderText("Ex: Dúvida sobre derivadas");
     tituloEdit->setMinimumHeight(40);
 
-    QLabel *descLabel = new QLabel("📄 Descrição:");
+    QLabel *descLabel = new QLabel("Descrição:");
     QTextEdit *descEdit = new QTextEdit();
     descEdit->setPlaceholderText("Descreva sua dúvida em detalhes...");
     descEdit->setMaximumHeight(200);
 
-    QLabel *imagemLabel = new QLabel("🖼️ Imagem (opcional):");
+    QLabel *imagemLabel = new QLabel("Imagem (opcional):");
     QPushButton *selecionarImagemBtn = new QPushButton("Selecionar Imagem");
     QLabel *imagemPathLabel = new QLabel("Nenhuma imagem selecionada");
     imagemPathLabel->setStyleSheet("color: #8E6915; font-size: 11px;");
@@ -551,7 +551,7 @@ void DuvidasDialog::on_adicionarDuvidaButton_clicked()
     });
 
     QHBoxLayout *btnLayout = new QHBoxLayout();
-    QPushButton *salvarBtn = new QPushButton("💾 Salvar");
+    QPushButton *salvarBtn = new QPushButton("Salvar");
     QPushButton *cancelarBtn = new QPushButton("✕ Cancelar");
 
     salvarBtn->setMinimumHeight(45);
@@ -675,7 +675,7 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
         tituloLabel->setWordWrap(true);
 
         QLabel *infoLabel = new QLabel(
-            QString("👤 %1 | 📖 %2 | 📅 %3 | %4")
+            QString("%1 | %2 | %3 | %4")
                 .arg(nomeAutor)
                 .arg(disciplina)
                 .arg(dataCriacao.left(10))
@@ -766,7 +766,7 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
         scrollRespostas->setWidget(containerRespostas);
         layout->addWidget(scrollRespostas);
 
-        QLabel *adicionarRespLabel = new QLabel("✍️ Adicionar sua resposta:");
+        QLabel *adicionarRespLabel = new QLabel("Adicionar sua resposta:");
         adicionarRespLabel->setStyleSheet("font-weight: bold; margin-top: 10px;");
         layout->addWidget(adicionarRespLabel);
 
@@ -775,7 +775,7 @@ void DuvidasDialog::abrirDetalheDuvida(int idDuvida)
         respostaEdit->setMaximumHeight(100);
         layout->addWidget(respostaEdit);
 
-        QPushButton *enviarBtn = new QPushButton("📤 Enviar Resposta");
+        QPushButton *enviarBtn = new QPushButton("Enviar Resposta");
         enviarBtn->setStyleSheet(
             "background-color: #F4B315; color: #1A161A; padding: 10px; "
             "border-radius: 8px; font-weight: bold;"
