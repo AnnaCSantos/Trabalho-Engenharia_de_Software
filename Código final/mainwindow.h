@@ -3,7 +3,10 @@
 
 #include <QMainWindow>
 #include <QString>
-#include "logindialog.h"
+
+// ✅ Forward declarations - declara as classes sem incluir os headers
+class PerfilDialog;
+class AvaliacaoMateriasDialog;
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -19,6 +22,7 @@ QT_END_NAMESPACE
 //   - Dúvidas (Sistema de perguntas e respostas por disciplina)
 //   - Grupos de Estudo (Listar Reservas)
 //   - Agenda Acadêmica (Gerenciar tarefas acadêmicas)
+//   - Ranking de Dificuldade (Visualizar grau de dificuldade das matérias)
 //
 // Também exibe informações do usuário logado
 //-----------------------------------------------------------------
@@ -36,6 +40,10 @@ public slots:
     // -----------------------------------------------------------------------
     void setLoggedInUser(const QString& username);
 
+protected:
+    // Sobrescreve o filtro de eventos para capturar o clique no label de perfil
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
 private slots:
     // Abre a janela de Agenda Acadêmica
     void on_agendaButton_clicked();
@@ -51,6 +59,12 @@ private slots:
 
     // Fecha o sistema
     void on_sairButton_clicked();
+
+    // Abre a janela de Ranking de Dificuldade das Matérias
+    void on_avaliacaoButton_clicked();
+
+    // Abre a janela de Perfil do usuário
+    void on_perfil_clicked();
 
 private:
     Ui::MainWindow *ui;                  // Interface visual
