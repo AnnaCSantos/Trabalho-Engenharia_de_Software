@@ -44,21 +44,17 @@ AgendaAcademicaDialog::AgendaAcademicaDialog(QWidget *parent, const QString& use
 
     carregarTarefas();
 
-    // Configura os eventos de clique na barra de navegação
     setupNavigationBar();
 
-    // Conecta o sinal do ComboBox
     connect(ui->filtroComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &AgendaAcademicaDialog::on_filtroComboBox_currentIndexChanged);
 }
 
-// DESTRUTOR
 AgendaAcademicaDialog::~AgendaAcademicaDialog()
 {
     delete ui;
 }
 
-// SETUP DATABASE
 void AgendaAcademicaDialog::setupDatabase()
 {
     dbConnection = QSqlDatabase::database("qt_sql_default_connection");
@@ -68,7 +64,6 @@ void AgendaAcademicaDialog::setupDatabase()
     }
 }
 
-// CRIAR TABELA TAREFAS
 void AgendaAcademicaDialog::criarTabelaTarefas()
 {
     QSqlQuery query(dbConnection);
@@ -84,7 +79,7 @@ void AgendaAcademicaDialog::criarTabelaTarefas()
         "disciplina TEXT, "
         "concluida INTEGER DEFAULT 0, "
         "data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP, "
-        "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario))";
+        "FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario))";
 
     if (!query.exec(createTableSQL)) {
         qDebug() << "Erro ao criar tabela Tarefas_Academicas:" << query.lastError().text();
@@ -93,22 +88,27 @@ void AgendaAcademicaDialog::criarTabelaTarefas()
     }
 }
 
-// GET ID USUÁRIO
 int AgendaAcademicaDialog::getIdUsuario(const QString& username)
 {
     QSqlQuery query(dbConnection);
-    query.prepare("SELECT id_usuario FROM Usuario WHERE usuario = ?");
+    query.prepare("SELECT id_usuario FROM USUARIOS WHERE usuario = ?");
     query.addBindValue(username);
 
     if (query.exec() && query.next()) {
-        return query.value(0).toInt();
+        int id = query.value(0).toInt();
+        qDebug() << "[AgendaAcademica] ID do usuário" << username << ":" << id;
+        return id;
     }
+
+    qDebug() << "[AgendaAcademica] ERRO: Usuário não encontrado!" << query.lastError().text();
     return -1;
 }
 
-// CARREGAR TAREFAS
 void AgendaAcademicaDialog::carregarTarefas(const QString& filtro)
 {
+    qDebug() << "=== CARREGANDO TAREFAS ===";
+    qDebug() << "Usuário logado:" << loggedInUsername;
+
     QWidget *containerWidget = ui->scrollArea->widget();
 
     QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(containerWidget->layout());
@@ -127,8 +127,28 @@ void AgendaAcademicaDialog::carregarTarefas(const QString& filtro)
 
     int idUsuario = getIdUsuario(loggedInUsername);
     if (idUsuario == -1) {
-        qDebug() << "Usuário não encontrado!";
+        qDebug() << "ERRO: Usuário não encontrado!";
+        QLabel *erroLabel = new QLabel("❌ Erro: Usuário não encontrado no banco de dados!");
+        erroLabel->setAlignment(Qt::AlignCenter);
+        erroLabel->setStyleSheet("color: #FF6B6B; font-size: 16px; padding: 30px;");
+        layout->addWidget(erroLabel);
         return;
+    }
+
+    qDebug() << "ID do usuário:" << idUsuario;
+
+    // DEBUG: Verificar se a tabela existe e tem dados
+    QSqlQuery debugQuery(dbConnection);
+    debugQuery.exec("SELECT COUNT(*) FROM Tarefas_Academicas");
+    if (debugQuery.next()) {
+        qDebug() << "Total de tarefas no banco:" << debugQuery.value(0).toInt();
+    }
+
+    debugQuery.prepare("SELECT COUNT(*) FROM Tarefas_Academicas WHERE id_usuario = ?");
+    debugQuery.addBindValue(idUsuario);
+    debugQuery.exec();
+    if (debugQuery.next()) {
+        qDebug() << "Tarefas deste usuário:" << debugQuery.value(0).toInt();
     }
 
     QString queryString = "SELECT * FROM Tarefas_Academicas WHERE id_usuario = ?";
@@ -156,12 +176,18 @@ void AgendaAcademicaDialog::carregarTarefas(const QString& filtro)
 
     queryString += " ORDER BY data_entrega ASC, concluida ASC";
 
+    qDebug() << "Query executada:" << queryString;
+
     QSqlQuery query(dbConnection);
     query.prepare(queryString);
     query.addBindValue(idUsuario);
 
     if (!query.exec()) {
-        qDebug() << "Erro ao carregar tarefas:" << query.lastError().text();
+        qDebug() << "ERRO ao executar query:" << query.lastError().text();
+        QLabel *erroLabel = new QLabel("❌ Erro ao carregar tarefas: " + query.lastError().text());
+        erroLabel->setAlignment(Qt::AlignCenter);
+        erroLabel->setStyleSheet("color: #FF6B6B; font-size: 14px; padding: 20px;");
+        layout->addWidget(erroLabel);
         return;
     }
 
@@ -175,10 +201,14 @@ void AgendaAcademicaDialog::carregarTarefas(const QString& filtro)
         QString disciplina = query.value("disciplina").toString();
         bool concluida = query.value("concluida").toInt() == 1;
 
+        qDebug() << "Tarefa carregada:" << id << "-" << titulo;
+
         QFrame *tarefaCard = criarCardTarefa(id, tipo, titulo, descricao, dataEntrega, disciplina, concluida);
         layout->addWidget(tarefaCard);
         count++;
     }
+
+    qDebug() << "Total de tarefas exibidas:" << count;
 
     if (count == 0) {
         QLabel *emptyLabel = new QLabel("📭 Nenhuma tarefa encontrada.\nClique em '➕ Nova Tarefa' para adicionar!");
@@ -197,7 +227,6 @@ void AgendaAcademicaDialog::carregarTarefas(const QString& filtro)
     layout->addStretch();
 }
 
-// CRIAR CARD TAREFA
 QFrame* AgendaAcademicaDialog::criarCardTarefa(int id, const QString& tipo, const QString& titulo,
                                                const QString& descricao, const QDate& dataEntrega,
                                                const QString& disciplina, bool concluida)
@@ -406,7 +435,6 @@ QFrame* AgendaAcademicaDialog::criarCardTarefa(int id, const QString& tipo, cons
     return card;
 }
 
-// BOTÃO ADICIONAR TAREFA
 void AgendaAcademicaDialog::on_adicionarTarefaButton_clicked()
 {
     QDialog *dialog = new QDialog(this);
@@ -507,6 +535,18 @@ void AgendaAcademicaDialog::on_adicionarTarefaButton_clicked()
 
         int idUsuario = getIdUsuario(loggedInUsername);
 
+        if (idUsuario == -1) {
+            QMessageBox::critical(dialog, "❌ Erro", "Erro: Usuário não encontrado no banco de dados!");
+            return;
+        }
+
+        qDebug() << "=== SALVANDO TAREFA ===";
+        qDebug() << "ID Usuário:" << idUsuario;
+        qDebug() << "Tipo:" << tipoCombo->currentText();
+        qDebug() << "Título:" << titulo;
+        qDebug() << "Disciplina:" << disciplina;
+        qDebug() << "Data:" << dataEdit->date().toString("yyyy-MM-dd");
+
         QSqlQuery insertQuery(dbConnection);
         insertQuery.prepare(
             "INSERT INTO Tarefas_Academicas (id_usuario, tipo, titulo, descricao, "
@@ -520,26 +560,27 @@ void AgendaAcademicaDialog::on_adicionarTarefaButton_clicked()
         insertQuery.addBindValue(disciplina);
 
         if (insertQuery.exec()) {
+            qDebug() << "Tarefa inserida com ID:" << insertQuery.lastInsertId().toInt();
             QMessageBox::information(dialog, "✅ Sucesso", "Tarefa adicionada com sucesso!");
             dialog->accept();
             carregarTarefas(ui->filtroComboBox->currentText());
         } else {
+            qDebug() << "ERRO ao inserir tarefa:" << insertQuery.lastError().text();
             QMessageBox::critical(dialog, "❌ Erro",
                                   "Erro ao adicionar tarefa: " + insertQuery.lastError().text());
         }
     });
 
     dialog->exec();
+    delete dialog;
 }
 
-// SLOT: Filtro alterado
 void AgendaAcademicaDialog::on_filtroComboBox_currentIndexChanged(int index)
 {
     Q_UNUSED(index);
     carregarTarefas(ui->filtroComboBox->currentText());
 }
 
-// SLOTS VAZIOS (podem ser implementados no futuro)
 void AgendaAcademicaDialog::on_removerTarefaButton_clicked()
 {
     // Remoção é feita diretamente nos cards
@@ -550,28 +591,25 @@ void AgendaAcademicaDialog::on_marcarConcluidaButton_clicked()
     // Conclusão é feita diretamente nos cards
 }
 
-// SETUP NAVIGATION BAR - Configura os cliques nos ícones
 void AgendaAcademicaDialog::setupNavigationBar()
 {
     ui->homeButton->installEventFilter(this);
     ui->perfilButton->installEventFilter(this);
 }
 
-// EVENT FILTER - Detecta cliques nos ícones da barra de navegação
 bool AgendaAcademicaDialog::eventFilter(QObject *obj, QEvent *event)
 {
-        if (obj == ui->homeButton && event->type() == QEvent::MouseButtonPress) {
-            this->close();
-            return true;
-        }
+    if (obj == ui->homeButton && event->type() == QEvent::MouseButtonPress) {
+        this->close();
+        return true;
+    }
 
-        if (obj == ui->perfilButton && event->type() == QEvent::MouseButtonPress) {
-            // Abre a janela de perfil
-            PerfilDialog *perfil = new PerfilDialog(this, loggedInUsername);
-            perfil->exec();
-            delete perfil;
-            return true;
-        }
+    if (obj == ui->perfilButton && event->type() == QEvent::MouseButtonPress) {
+        PerfilDialog *perfil = new PerfilDialog(this, loggedInUsername);
+        perfil->exec();
+        delete perfil;
+        return true;
+    }
 
-        return QDialog::eventFilter(obj, event);
+    return QDialog::eventFilter(obj, event);
 }
