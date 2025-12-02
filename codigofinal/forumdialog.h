@@ -12,15 +12,6 @@ namespace Ui {
 class ForumDialog;
 }
 
-// ----------------------- CLASSE ForumDialog - Central de Dúvidas EducaUTFPR ---------------------
-// Responsabilidade: Gerenciar o sistema de dúvidas e respostas por matéria
-// Funcionalidades:
-//   - Navegar por categorias de matérias
-//   - Buscar dúvidas existentes
-//   - Visualizar e responder dúvidas
-//   - Sistema de votação (curtidas)
-//   - Criar novas dúvidas
-// -------------------------------------------------------------------------------------------------
 class ForumDialog : public QDialog
 {
     Q_OBJECT
@@ -30,20 +21,10 @@ public:
     ~ForumDialog();
 
 private slots:
-    // Navegação por categorias
     void onCategoriaClicked(const QString& categoria);
-
-    // Abrir matéria específica
-    void onMateriaClicked(int idMateria, const QString& nomeMateria);
-
-    // Abrir detalhes de uma dúvida
+    void onMateriaClicked(int idDisciplina, const QString& nomeDisciplina);
     void onDuvidaClicked(int idDuvida);
-
-
-    // Buscar dúvidas
     void on_searchLine_textChanged(const QString& texto);
-
-    // Voltar para categorias
     void voltarParaCategorias();
 
 protected:
@@ -55,25 +36,26 @@ private:
     QSqlDatabase dbConnection;
     QVBoxLayout *layoutPrincipal;
     QString categoriaAtual;
-    int materiaAtual;
+    int disciplinaAtual;
 
     void setupDatabase();
-    void criarTabelasNecessarias();
-    void popularMateriasExemplo();
+    void criarTabelasDeCurtidas();
     int getIdUsuario(const QString& username);
-    void atualizarEstatisticas();  // <-- ADICIONE ESTA LINHA
+    void atualizarEstatisticas();
 
-    // Carregar dados
     void carregarCategorias();
-    void carregarMateriasDaCategoria(const QString& categoria);
-    void carregarDuvidasDaMateria(int idMateria);
+    void carregarDisciplinasDaCategoria(const QString& categoria);
+    void carregarDuvidasDaDisciplina(int idDisciplina);
 
-    // Criar elementos visuais
-    QPushButton* criarBotaoCategoria(const QString& categoria, const QString& icone, const QString& cor);
-    QPushButton* criarBotaoMateria(int idMateria, const QString& nome, const QString& cor);
+    // Funções visuais
+    QPushButton* criarBotaoCategoria(const QString& categoria);
+    QPushButton* criarBotaoDisciplina(int id, const QString& nome);
     QFrame* criarCardDuvida(int idDuvida, const QString& titulo, const QString& preview,
                             const QString& autor, const QString& data,
                             int numRespostas, int numCurtidas, bool jaRespondida);
+
+    QString identificarCategoria(const QString& nomeDisciplina);
+    QPair<QString, QString> getEstiloCategoria(const QString& categoria);
 };
 
-#endif
+#endif // FORUMDIALOG_H
