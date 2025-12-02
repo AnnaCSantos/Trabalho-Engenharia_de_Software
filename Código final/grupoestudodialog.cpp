@@ -4,6 +4,7 @@
 #include "perfildialog.h"
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlRecord>
 #include <QMessageBox>
 #include <QDebug>
 #include <QFrame>
@@ -14,10 +15,8 @@
 #include <QRandomGenerator>
 #include <QEvent>
 #include <QMouseEvent>
+#include <QColor>
 
-// ============================================================================
-// CONSTRUTOR
-// ============================================================================
 GrupoEstudoDialog::GrupoEstudoDialog(QWidget *parent, const QString& username)
     : QDialog(parent)
     , ui(new Ui::GrupoEstudoDialog)
@@ -31,8 +30,6 @@ GrupoEstudoDialog::GrupoEstudoDialog(QWidget *parent, const QString& username)
     setupDatabase();
     criarTabelasNecessarias();
 
-
-    // Carrega as categorias no ComboBox (ordem lógica do curso)
     ui->categoriaComboBox->clear();
     ui->categoriaComboBox->addItem("📚 Todas as Matérias");
     ui->categoriaComboBox->addItem("📐 Matemática");
@@ -46,61 +43,29 @@ GrupoEstudoDialog::GrupoEstudoDialog(QWidget *parent, const QString& username)
     ui->categoriaComboBox->addItem("📄 TCC e Estágio");
     ui->categoriaComboBox->addItem("🎯 Atividades Extras");
 
-    // Conecta o botão de confirmar criação
-    connect(ui->confirmarCriarButton, &QPushButton::clicked,
-            this, &GrupoEstudoDialog::on_confirmarCriarButton_clicked);
+    connect(ui->entrarGrupoButton, &QPushButton::clicked, this, &GrupoEstudoDialog::onEntrarGrupoPrivado);
 
-    // Conecta o botão de entrar em grupo privado
-    connect(ui->entrarGrupoButton, &QPushButton::clicked,
-            this, &GrupoEstudoDialog::onEntrarGrupoPrivado);
-
-    // Conecta os botões de navegação
-    connect(ui->materiasButton, &QPushButton::clicked,
-            this, &GrupoEstudoDialog::on_materiasButton_clicked);
-    connect(ui->gruposButton, &QPushButton::clicked,
-            this, &GrupoEstudoDialog::on_gruposButton_clicked);
-    connect(ui->criarButton, &QPushButton::clicked,
-            this, &GrupoEstudoDialog::on_criarButton_clicked);
-
-    // Filtro de categoria
-    connect(ui->categoriaComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &GrupoEstudoDialog::on_categoriaComboBox_currentIndexChanged);
-
-    // Configura os eventos de clique na barra de navegação
     setupNavigationBar();
-
-    // Mostra a tela inicial (Matérias)
     mostrarTela("materias");
 }
 
-// ============================================================================
-// DESTRUTOR
-// ============================================================================
 GrupoEstudoDialog::~GrupoEstudoDialog()
 {
     delete ui;
 }
 
-// ============================================================================
-// SETUP DATABASE
-// ============================================================================
 void GrupoEstudoDialog::setupDatabase()
 {
     dbConnection = QSqlDatabase::database("qt_sql_default_connection");
-
     if (!dbConnection.isOpen()) {
-        qDebug() << "[GrupoEstudoDialog] ERRO: Banco de dados não está aberto.";
+        qDebug() << "Erro: Banco de dados fechado.";
     }
 }
 
-// ============================================================================
-// CRIAR TABELAS NECESSÁRIAS
-// ============================================================================
 void GrupoEstudoDialog::criarTabelasNecessarias()
 {
     QSqlQuery query(dbConnection);
 
-    // Tabela de Matérias
     query.exec(
         "CREATE TABLE IF NOT EXISTS Materias ("
         "id_materia INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -110,21 +75,19 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
         "cor TEXT)"
         );
 
-    // Tabela de Salas de Estudo
     query.exec(
         "CREATE TABLE IF NOT EXISTS Salas_Estudo ("
         "id_sala INTEGER PRIMARY KEY AUTOINCREMENT, "
         "id_materia INTEGER NOT NULL, "
         "nome_sala TEXT NOT NULL, "
         "codigo_sala TEXT UNIQUE NOT NULL, "
-        "tipo TEXT NOT NULL, "  // 'publica' ou 'privada'
+        "tipo TEXT NOT NULL, "
         "senha TEXT, "
         "max_participantes INTEGER DEFAULT 10, "
         "data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP, "
         "FOREIGN KEY (id_materia) REFERENCES Materias(id_materia))"
         );
 
-    // Tabela de Participantes
     query.exec(
         "CREATE TABLE IF NOT EXISTS Participantes_Sala ("
         "id_participante INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -136,7 +99,6 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
         "UNIQUE(id_sala, id_usuario))"
         );
 
-    // Tabela de Mensagens do Chat
     query.exec(
         "CREATE TABLE IF NOT EXISTS Mensagens_Chat ("
         "id_mensagem INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -148,25 +110,17 @@ void GrupoEstudoDialog::criarTabelasNecessarias()
         "FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario))"
         );
 
-    // Popula matérias de exemplo (se não existirem)
     query.exec("SELECT COUNT(*) FROM Materias");
     if (query.next() && query.value(0).toInt() == 0) {
         popularMateriasCompletas();
     }
 }
 
-// ============================================================================
-// POPULAR MATÉRIAS COMPLETAS - ORGANIZADO POR CATEGORIA
-// ============================================================================
 void GrupoEstudoDialog::popularMateriasCompletas()
 {
     QSqlQuery query(dbConnection);
-
-    // 🎨 Paleta de cores baseada no tema do sistema
     QList<QStringList> materias = {
-
-    // ========== 📐 MATEMÁTICA ==========
-    {"Cálculo Diferencial e Integral 1", "Matemática", "📐", "#F4B315"},
+        {"Cálculo Diferencial e Integral 1", "Matemática", "📐", "#F4B315"},
         {"Cálculo Diferencial e Integral 2", "Matemática", "📐", "#E5A314"},
         {"Cálculo Diferencial e Integral 3", "Matemática", "📐", "#D69313"},
         {"Álgebra Linear", "Matemática", "📊", "#C78312"},
@@ -176,15 +130,11 @@ void GrupoEstudoDialog::popularMateriasCompletas()
         {"Cálculo Numérico", "Matemática", "🔢", "#8B430E"},
         {"Probabilidade e Estatística", "Matemática", "📊", "#7C330D"},
         {"Análise de Sistemas Lineares", "Matemática", "📈", "#8E6915"},
-
-        // ========== ⚛️ FÍSICA ==========
         {"Física Teórica 1", "Física", "⚛️", "#4A90E2"},
         {"Física Teórica 2", "Física", "⚛️", "#3A80D2"},
         {"Física Teórica 3", "Física", "⚛️", "#2A70C2"},
         {"Física Experimental 1", "Física", "🧪", "#5BA0F2"},
         {"Física Experimental 2", "Física", "🧪", "#6BB0FF"},
-
-        // ========== 💻 PROGRAMAÇÃO E COMPUTAÇÃO ==========
         {"Fundamentos de Programação 1", "Programação", "💻", "#E74C3C"},
         {"Fundamentos de Programação 2", "Programação", "💻", "#C0392B"},
         {"Programação Orientada a Objetos", "Programação", "🎲", "#A93226"},
@@ -193,18 +143,12 @@ void GrupoEstudoDialog::popularMateriasCompletas()
         {"Compiladores", "Programação", "📝", "#641E16"},
         {"Teoria da Computação", "Programação", "🧮", "#943126"},
         {"Introdução à Lógica para Computação", "Programação", "🧠", "#A43B2B"},
-
-        // ========== 🗄️ BANCO DE DADOS ==========
         {"Banco de Dados", "Banco de Dados", "🗄️", "#9B59B6"},
-
-        // ========== 🌐 REDES E SISTEMAS ==========
         {"Sistemas Operacionais", "Redes e Sistemas", "💾", "#16A085"},
         {"Redes de Computadores", "Redes e Sistemas", "🌐", "#138D75"},
         {"Comunicação de Dados", "Redes e Sistemas", "📡", "#117A65"},
         {"Sistemas Distribuídos", "Redes e Sistemas", "☁️", "#0E6655"},
         {"Segurança e Auditoria de Sistemas", "Redes e Sistemas", "🔒", "#0B5345"},
-
-        // ========== 🔧 ENGENHARIA DE HARDWARE ==========
         {"Introdução à Engenharia de Computação", "Engenharia", "💡", "#F39C12"},
         {"Arquitetura e Organização de Computadores", "Engenharia", "🖥️", "#E67E22"},
         {"Circuitos Digitais", "Engenharia", "🔌", "#D68910"},
@@ -214,8 +158,6 @@ void GrupoEstudoDialog::popularMateriasCompletas()
         {"Análise de Circuitos Elétricos 1", "Engenharia", "⚡", "#873600"},
         {"Materiais e Equipamentos Elétricos", "Engenharia", "⚡", "#6E2C00"},
         {"Desenho Técnico", "Engenharia", "✏️", "#DC7633"},
-
-        // ========== 🎛️ CONTROLE E SISTEMAS EMBARCADOS ==========
         {"Fundamentos de Controle", "Engenharia", "🎛️", "#28B463"},
         {"Controle Digital", "Engenharia", "🎮", "#239B56"},
         {"Lógica Reconfigurável", "Engenharia", "🔧", "#1E8449"},
@@ -223,23 +165,13 @@ void GrupoEstudoDialog::popularMateriasCompletas()
         {"Sistemas Embarcados", "Engenharia", "🔧", "#145A32"},
         {"Instrumentação Eletrônica", "Engenharia", "📡", "#0E4B26"},
         {"Processamento Digital de Sinais", "Engenharia", "📊", "#7DCEA0"},
-
-        // ========== 🛠️ OFICINAS E PROJETOS ==========
         {"Oficina de Integração 1", "Engenharia", "🛠️", "#5DADE2"},
         {"Oficina de Integração 2", "Engenharia", "🛠️", "#3498DB"},
-
-        // ========== ⚗️ QUÍMICA ==========
         {"Química Geral", "Química", "⚗️", "#1ABC9C"},
         {"Química Experimental", "Química", "🧪", "#17A589"},
-
-        // ========== 🤖 INTELIGÊNCIA ARTIFICIAL ==========
         {"Sistemas Inteligentes 1", "Programação", "🤖", "#E74C3C"},
-
-        // ========== 🗂️ ENGENHARIA DE SOFTWARE ==========
         {"Engenharia de Software", "Programação", "🗂️", "#95A5A6"},
         {"Desenvolvimento de Aplicações Web", "Programação", "🌐", "#7F8C8D"},
-
-        // ========== 📚 HUMANAS E SOCIAIS ==========
         {"Comunicação Linguística", "Humanas e Sociais", "📝", "#34495E"},
         {"Inglês Instrumental", "Humanas e Sociais", "🌍", "#2C3E50"},
         {"Metodologia de Pesquisa", "Humanas e Sociais", "📚", "#566573"},
@@ -251,40 +183,52 @@ void GrupoEstudoDialog::popularMateriasCompletas()
         {"Qualidade de Vida", "Humanas e Sociais", "💚", "#82E0AA"},
         {"Aptidão Física", "Humanas e Sociais", "🏃", "#ABEBC6"},
         {"Libras 1", "Humanas e Sociais", "👋", "#D5F4E6"},
-
-        // ========== 📄 TCC E ESTÁGIO ==========
         {"Trabalho de Conclusão de Curso 1", "TCC e Estágio", "📄", "#85C1E2"},
         {"Trabalho de Conclusão de Curso 2", "TCC e Estágio", "📄", "#5DADE2"},
         {"Estágio Curricular Obrigatório", "TCC e Estágio", "💼", "#3498DB"},
-
-        // ========== 🎯 ATIVIDADES EXTRAS ==========
         {"Atividades Complementares", "Atividades Extras", "🎯", "#AED6F1"}
-};
+    };
 
-// Insere as matérias no banco
-for (const auto& mat : materias) {
-    query.prepare("INSERT INTO Materias (nome, categoria, icone, cor) VALUES (?, ?, ?, ?)");
-    query.addBindValue(mat[0]); // Nome
-    query.addBindValue(mat[1]); // Categoria
-    query.addBindValue(mat[2]); // Ícone
-    query.addBindValue(mat[3]); // Cor
+    dbConnection.transaction();
+    QSqlQuery queryIns(dbConnection);
+    queryIns.prepare("INSERT INTO Materias (nome, categoria, icone, cor) VALUES (?, ?, ?, ?)");
 
-    if (!query.exec()) {
-        qDebug() << "❌ Erro ao inserir matéria:" << mat[0] << query.lastError().text();
+    for (const auto& mat : materias) {
+        queryIns.addBindValue(mat[0]);
+        queryIns.addBindValue(mat[1]);
+        queryIns.addBindValue(mat[2]);
+        queryIns.addBindValue(mat[3]);
+        queryIns.exec();
     }
+    dbConnection.commit();
 }
 
-qDebug() << "✅ Matérias populadas com sucesso! Total:" << materias.size();
+bool GrupoEstudoDialog::validarCriacaoSala()
+{
+    QString nomeSala = ui->nomeSalaEdit->text().trimmed();
+
+    if (nomeSala.isEmpty()) {
+        QMessageBox::warning(this, "⚠️ Campo Vazio", "Digite o nome do grupo!");
+        return false;
+    }
+
+    int idMateria = ui->materiaComboBox->currentData().toInt();
+    if (idMateria <= 0) {
+        QMessageBox::warning(this, "⚠️ Erro", "Selecione uma matéria válida!");
+        return false;
+    }
+
+    if (ui->tipoPrivadaRadio->isChecked() && ui->senhaEdit->text().isEmpty()) {
+        QMessageBox::warning(this, "⚠️ Senha Obrigatória", "Grupos privados precisam de senha!");
+        return false;
+    }
+
+    return true;
 }
 
-// ============================================================================
-// CRIAR SALA (AÇÃO DO BOTÃO CONFIRMAR)
-// ============================================================================
 void GrupoEstudoDialog::on_confirmarCriarButton_clicked()
 {
-    if (!validarCriacaoSala()) {
-        return;
-    }
+    if (!validarCriacaoSala()) return;
 
     QString nomeSala = ui->nomeSalaEdit->text().trimmed();
     int idMateria = ui->materiaComboBox->currentData().toInt();
@@ -299,7 +243,6 @@ void GrupoEstudoDialog::on_confirmarCriarButton_clicked()
         "VALUES (?, ?, ?, ?, ?, ?)"
         );
 
-    // Binds das variáveis coletadas acima
     query.addBindValue(idMateria);
     query.addBindValue(nomeSala);
     query.addBindValue(codigo);
@@ -309,8 +252,6 @@ void GrupoEstudoDialog::on_confirmarCriarButton_clicked()
 
     if (query.exec()) {
         int idSala = query.lastInsertId().toInt();
-
-        // Adiciona criador como participante
         int idUsuario = getIdUsuario(loggedInUsername);
 
         QSqlQuery pQuery(dbConnection);
@@ -324,21 +265,14 @@ void GrupoEstudoDialog::on_confirmarCriarButton_clicked()
                                      .arg(codigo)
                                      .arg(tipo == "privada" ? "Compartilhe com cuidado!" : ""));
 
-        // Limpa os campos
         ui->nomeSalaEdit->clear();
         ui->senhaEdit->clear();
-
-        // Volta para a tela de grupos
         mostrarTela("grupos");
     } else {
-        QMessageBox::critical(this, "❌ Erro",
-                              "Erro ao criar grupo: " + query.lastError().text());
+        QMessageBox::critical(this, "❌ Erro", "Erro ao criar grupo: " + query.lastError().text());
     }
 }
 
-// ============================================================================
-// AUXILIARES E NAVEGAÇÃO
-// ============================================================================
 int GrupoEstudoDialog::getIdUsuario(const QString& username)
 {
     QSqlQuery query(dbConnection);
@@ -362,9 +296,22 @@ void GrupoEstudoDialog::mostrarTela(const QString& tela)
         ui->stackedWidget->setCurrentIndex(1);
         carregarSalasPublicas();
     } else if (tela == "criar") {
-        popularComboMateriasCriacao();
         ui->stackedWidget->setCurrentIndex(2);
+        popularComboMateriasCriacao();
+        ui->nomeSalaEdit->clear();
+        ui->senhaEdit->clear();
+        ui->tipoPublicaRadio->setChecked(true);
+        ui->maxParticipantesSpinBox->setValue(10);
+    }
+}
 
+void GrupoEstudoDialog::popularComboMateriasCriacao()
+{
+    ui->materiaComboBox->clear();
+    QSqlQuery query(dbConnection);
+    query.exec("SELECT id_materia, nome FROM Materias ORDER BY nome ASC");
+    while (query.next()) {
+        ui->materiaComboBox->addItem(query.value(1).toString(), query.value(0).toInt());
     }
 }
 
@@ -380,25 +327,21 @@ void GrupoEstudoDialog::carregarMateriasDaCategoria(const QString& categoria)
         container->setLayout(layout);
     }
 
-    // Limpa o layout
     QLayoutItem *item;
     while ((item = layout->takeAt(0)) != nullptr) {
         delete item->widget();
         delete item;
     }
 
-    // Busca matérias
     QSqlQuery query(dbConnection);
     QString queryStr = "SELECT id_materia, nome, icone, cor FROM Materias";
 
     if (!categoria.contains("Todas")) {
-        // Remove o emoji do início se houver (lógica simples)
         QString categoriaLimpa = categoria;
         int primeiroEspaco = categoriaLimpa.indexOf(' ');
         if (primeiroEspaco != -1) {
             categoriaLimpa = categoriaLimpa.mid(primeiroEspaco + 1).trimmed();
         }
-
         queryStr += " WHERE categoria = ?";
         query.prepare(queryStr);
         query.addBindValue(categoriaLimpa);
@@ -409,17 +352,17 @@ void GrupoEstudoDialog::carregarMateriasDaCategoria(const QString& categoria)
     query.exec();
 
     while (query.next()) {
-        int id = query.value(0).toInt();
-        QString nome = query.value(1).toString();
-        QString icone = query.value(2).toString();
-        QString cor = query.value(3).toString();
-
-        QPushButton *btn = criarBotaoMateria(id, nome, icone, cor);
+        QPushButton *btn = criarBotaoMateria(
+            query.value(0).toInt(),
+            query.value(1).toString(),
+            query.value(2).toString(),
+            query.value(3).toString()
+            );
         layout->addWidget(btn);
     }
-
     layout->addStretch();
 }
+
 QPushButton* GrupoEstudoDialog::criarBotaoMateria(int idMateria, const QString& nome,
                                                   const QString& icone, const QString& cor)
 {
@@ -428,10 +371,9 @@ QPushButton* GrupoEstudoDialog::criarBotaoMateria(int idMateria, const QString& 
     btn->setMinimumHeight(70);
     btn->setCursor(Qt::PointingHandCursor);
 
-    // Lógica correta para escurecer a cor no Hover
     QColor corObj(cor);
     QString corBase = corObj.name();
-    QString corHover = corObj.darker(120).name(); // Escurece 20%
+    QString corHover = corObj.darker(120).name();
 
     btn->setStyleSheet(
         QString("QPushButton {"
@@ -445,7 +387,7 @@ QPushButton* GrupoEstudoDialog::criarBotaoMateria(int idMateria, const QString& 
                 "   text-align: left;"
                 "}"
                 "QPushButton:hover {"
-                "   background-color: %2;" // Usa a cor calculada
+                "   background-color: %2;"
                 "   transform: scale(1.02);"
                 "}").arg(corBase).arg(corHover)
         );
@@ -459,18 +401,14 @@ QPushButton* GrupoEstudoDialog::criarBotaoMateria(int idMateria, const QString& 
 
 void GrupoEstudoDialog::onMateriaClicked(int idMateria)
 {
-    // Busca o nome da matéria
     QSqlQuery query(dbConnection);
     query.prepare("SELECT nome FROM Materias WHERE id_materia = ?");
     query.addBindValue(idMateria);
 
-    if (!query.exec() || !query.next()) {
-        return;
-    }
+    if (!query.exec() || !query.next()) return;
 
     QString nomeMateria = query.value(0).toString();
 
-    // Busca a sala geral da matéria (ou cria se não existir)
     query.prepare("SELECT id_sala, codigo_sala, nome_sala FROM Salas_Estudo WHERE id_materia = ? AND tipo = 'publica'");
     query.addBindValue(idMateria);
 
@@ -481,7 +419,6 @@ void GrupoEstudoDialog::onMateriaClicked(int idMateria)
         idSala = query.value(0).toInt();
         nomeSala = query.value(2).toString();
     } else {
-        // Cria sala geral automaticamente
         QString codigo = gerarCodigoSala();
         query.prepare(
             "INSERT INTO Salas_Estudo (id_materia, nome_sala, codigo_sala, tipo, max_participantes) "
@@ -496,14 +433,12 @@ void GrupoEstudoDialog::onMateriaClicked(int idMateria)
         nomeSala = "Chat Geral - " + nomeMateria;
     }
 
-    // Adiciona usuário como participante
     int idUsuario = getIdUsuario(loggedInUsername);
     query.prepare("INSERT OR IGNORE INTO Participantes_Sala (id_sala, id_usuario) VALUES (?, ?)");
     query.addBindValue(idSala);
     query.addBindValue(idUsuario);
     query.exec();
 
-    // Abre o chat
     ChatMateria *chat = new ChatMateria(this, loggedInUsername, idSala, nomeSala);
     chat->exec();
     delete chat;
@@ -521,14 +456,12 @@ void GrupoEstudoDialog::carregarSalasPublicas()
         container->setLayout(layout);
     }
 
-    // Limpa
     QLayoutItem *item;
     while ((item = layout->takeAt(0)) != nullptr) {
         delete item->widget();
         delete item;
     }
 
-    // Busca salas públicas
     QSqlQuery query(dbConnection);
     query.exec(
         "SELECT s.id_sala, s.codigo_sala, s.nome_sala, s.tipo, s.max_participantes, "
@@ -541,15 +474,14 @@ void GrupoEstudoDialog::carregarSalasPublicas()
         );
 
     while (query.next()) {
-        int idSala = query.value(0).toInt();
-        QString codigoSala = query.value(1).toString();
-        QString nomeSala = query.value(2).toString();
-        QString tipo = query.value(3).toString();
-        int maxParticipantes = query.value(4).toInt();
-        int numParticipantes = query.value(5).toInt();
-        qDebug() << "SALA ENCONTRADA -> ID:" << idSala << " | NOME:" << nomeSala << " | CODIGO:" << codigoSala;
-        QFrame *card = criarCardSala(idSala, codigoSala, nomeSala, tipo,
-                                     numParticipantes, maxParticipantes);
+        QFrame *card = criarCardSala(
+            query.value(0).toInt(),
+            query.value(1).toString(),
+            query.value(2).toString(),
+            query.value(3).toString(),
+            query.value(5).toInt(),
+            query.value(4).toInt()
+            );
         layout->addWidget(card);
     }
 
@@ -563,75 +495,49 @@ QFrame* GrupoEstudoDialog::criarCardSala(int idSala, const QString& codigoSala,
     QFrame *card = new QFrame();
     card->setObjectName(QString::number(idSala));
     card->setFrameShape(QFrame::StyledPanel);
-    card->setMinimumHeight(100);
-    card->setMaximumHeight(150); // Limitação na altura máxima
+    card->setMinimumHeight(110);
     card->setStyleSheet(
         "QFrame {"
         "   background-color: #423738;"
-        "   border-left: 5px solid #F4B315;"
+        "   border-left: 6px solid #F4B315;"
         "   border-radius: 10px;"
         "   padding: 10px;"
-        "   margin: 5px;"
+        "   margin: 5px 0px;"
         "}"
-        "QFrame:hover {"
-        "   background-color: #524447;"
-        "}"
+        "QFrame:hover { background-color: #524447; }"
         );
 
     QHBoxLayout *mainLayout = new QHBoxLayout(card);
-    mainLayout->setSpacing(10);
-    mainLayout->setContentsMargins(15, 15, 15, 15);
+    mainLayout->setSpacing(15);
+    mainLayout->setContentsMargins(15, 10, 15, 10);
 
-    // --- CONTAINER PARA OS TEXTOS ---
     QWidget *textContainer = new QWidget();
     textContainer->setStyleSheet("background: transparent; border: none;");
+    textContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     QVBoxLayout *infoLayout = new QVBoxLayout(textContainer);
     infoLayout->setContentsMargins(0, 0, 0, 0);
-    infoLayout->setSpacing(8); // MUDANÇA: Aumentei o espaçamento
+    infoLayout->setSpacing(5);
 
-    QLabel *nomeLabel = new QLabel(nomeSala.isEmpty() ? "Sem Nome" : nomeSala);
-    nomeLabel->setStyleSheet(
-        "QLabel {"
-        "   font-size: 18px;"
-        "   font-weight: bold;"
-        "   color: #F4B315;"
-        "   background: transparent;"
-        "   border: none;"
-        "   padding: 0px;"
-        "   margin: 0px;"
-        "}"
-        );
-    nomeLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    QLabel *nomeLabel = new QLabel(nomeSala.isEmpty() ? "⚠️ Sem Nome" : nomeSala);
+    nomeLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #F4B315; border: none;");
     nomeLabel->setWordWrap(true);
-    nomeLabel->setMinimumHeight(25);
 
     QLabel *infoLabel = new QLabel(
-        QString("👥 %1/%2 participantes | 🔑 %3")
+        QString("👥 %1/%2 participantes | 🔑 Código: %3")
             .arg(numParticipantes)
             .arg(maxParticipantes)
             .arg(codigoSala)
         );
-    infoLabel->setStyleSheet(
-        "QLabel {"
-        "   font-size: 12px;"
-        "   color: #D3AF35;"
-        "   background: transparent;"
-        "   border: none;"
-        "   padding: 0px;"
-        "   margin: 0px;"
-        "}"
-        );
-    infoLabel->setMinimumHeight(20);
+    infoLabel->setStyleSheet("font-size: 13px; color: #D3AF35; border: none;");
 
     infoLayout->addWidget(nomeLabel);
     infoLayout->addWidget(infoLabel);
     infoLayout->addStretch();
 
-    // Botão Entrar
     QPushButton *entrarBtn = new QPushButton("🔥 Entrar");
     entrarBtn->setCursor(Qt::PointingHandCursor);
-    entrarBtn->setFixedSize(100, 40);
+    entrarBtn->setFixedSize(110, 45);
     entrarBtn->setStyleSheet(
         "QPushButton {"
         "   background-color: #F4B315;"
@@ -639,6 +545,7 @@ QFrame* GrupoEstudoDialog::criarCardSala(int idSala, const QString& codigoSala,
         "   border: none;"
         "   border-radius: 8px;"
         "   font-weight: bold;"
+        "   font-size: 14px;"
         "}"
         "QPushButton:hover { background-color: #D3AF35; }"
         );
@@ -648,57 +555,36 @@ QFrame* GrupoEstudoDialog::criarCardSala(int idSala, const QString& codigoSala,
     });
 
     mainLayout->addWidget(textContainer, 1);
-    mainLayout->addWidget(entrarBtn, 0, Qt::AlignVCenter); // Alinhamento vertical
+    mainLayout->addWidget(entrarBtn);
 
     return card;
 }
+
 void GrupoEstudoDialog::onSalaClicked(int idSala)
 {
-    // Busca informações da sala
     QSqlQuery query(dbConnection);
     query.prepare("SELECT nome_sala FROM Salas_Estudo WHERE id_sala = ?");
     query.addBindValue(idSala);
 
-    if (!query.exec() || !query.next()) {
-        return;
-    }
+    if (!query.exec() || !query.next()) return;
 
     QString nomeSala = query.value(0).toString();
-
-    // Adiciona usuário como participante
     int idUsuario = getIdUsuario(loggedInUsername);
+
     query.prepare("INSERT OR IGNORE INTO Participantes_Sala (id_sala, id_usuario) VALUES (?, ?)");
     query.addBindValue(idSala);
     query.addBindValue(idUsuario);
     query.exec();
 
-    // Abre o chat
     ChatMateria *chat = new ChatMateria(this, loggedInUsername, idSala, nomeSala);
     chat->exec();
     delete chat;
 }
 
-// ============================================================================
-// NAVEGAÇÃO E EVENTOS
-// ============================================================================
-void GrupoEstudoDialog::on_materiasButton_clicked()
-{
-    mostrarTela("materias");
-}
-
-void GrupoEstudoDialog::on_gruposButton_clicked()
-{
-    mostrarTela("grupos");
-}
-
-void GrupoEstudoDialog::on_criarButton_clicked()
-{
-    mostrarTela("criar");
-}
-
-void GrupoEstudoDialog::on_categoriaComboBox_currentIndexChanged(int index)
-{
-    Q_UNUSED(index);
+void GrupoEstudoDialog::on_materiasButton_clicked() { mostrarTela("materias"); }
+void GrupoEstudoDialog::on_gruposButton_clicked() { mostrarTela("grupos"); }
+void GrupoEstudoDialog::on_criarButton_clicked() { mostrarTela("criar"); }
+void GrupoEstudoDialog::on_categoriaComboBox_currentIndexChanged(int) {
     carregarMateriasDaCategoria(ui->categoriaComboBox->currentText());
 }
 
@@ -714,14 +600,12 @@ bool GrupoEstudoDialog::eventFilter(QObject *obj, QEvent *event)
         this->close();
         return true;
     }
-
     if (obj == ui->perfilButton && event->type() == QEvent::MouseButtonPress) {
         PerfilDialog *perfil = new PerfilDialog(this, loggedInUsername);
         perfil->exec();
         delete perfil;
         return true;
     }
-
     return QDialog::eventFilter(obj, event);
 }
 
@@ -731,21 +615,16 @@ void GrupoEstudoDialog::onEntrarGrupoPrivado()
     QString senha = ui->senhaGrupoEdit->text();
 
     if (codigo.isEmpty()) {
-        QMessageBox::warning(this, "⚠️ Campo Vazio",
-                             "Por favor, digite o código do grupo!");
+        QMessageBox::warning(this, "⚠️ Campo Vazio", "Por favor, digite o código do grupo!");
         return;
     }
 
     QSqlQuery query(dbConnection);
-    query.prepare(
-        "SELECT id_sala, tipo, senha, nome_sala FROM Salas_Estudo "
-        "WHERE codigo_sala = ?"
-        );
+    query.prepare("SELECT id_sala, tipo, senha, nome_sala FROM Salas_Estudo WHERE codigo_sala = ?");
     query.addBindValue(codigo);
 
     if (!query.exec() || !query.next()) {
-        QMessageBox::warning(this, "⚠️ Grupo Não Encontrado",
-                             "Não existe nenhum grupo com este código!");
+        QMessageBox::warning(this, "⚠️ Grupo Não Encontrado", "Não existe nenhum grupo com este código!");
         return;
     }
 
@@ -755,8 +634,7 @@ void GrupoEstudoDialog::onEntrarGrupoPrivado()
     QString nomeSala = query.value(3).toString();
 
     if (tipo == "privada" && senha != senhaCorreta) {
-        QMessageBox::warning(this, "⚠️ Senha Incorreta",
-                             "A senha digitada está incorreta!");
+        QMessageBox::warning(this, "⚠️ Senha Incorreta", "A senha digitada está incorreta!");
         return;
     }
 
@@ -781,36 +659,4 @@ QString GrupoEstudoDialog::gerarCodigoSala()
         codigo += QString::number(QRandomGenerator::global()->bounded(10));
     }
     return codigo;
-}
-
-bool GrupoEstudoDialog::validarCriacaoSala()
-{
-    if (ui->nomeSalaEdit->text().trimmed().isEmpty()) {
-        QMessageBox::warning(this, "⚠️ Campo Vazio", "Digite o nome do grupo!");
-        return false;
-    }
-
-    if (ui->tipoPrivadaRadio->isChecked() && ui->senhaEdit->text().isEmpty()) {
-        QMessageBox::warning(this, "⚠️ Senha Obrigatória",
-                             "Grupos privados precisam de senha!");
-        return false;
-    }
-
-    return true;
-}
-
-void GrupoEstudoDialog::popularComboMateriasCriacao()
-{
-    ui->materiaComboBox->clear(); // Limpa antes de encher
-
-    QSqlQuery query(dbConnection);
-    // Busca todas as matérias ordenadas por nome
-    query.exec("SELECT id_materia, nome FROM Materias ORDER BY nome ASC");
-
-    while (query.next()) {
-        int id = query.value(0).toInt();
-        QString nome = query.value(1).toString();
-
-        ui->materiaComboBox->addItem(nome, id);
-    }
 }
