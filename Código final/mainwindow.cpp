@@ -3,14 +3,12 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QApplication>
-
-// ============================================================================
-// INCLUDES DAS JANELAS DO SISTEMA
-// ============================================================================
+#include "perfildialog.h"
+#include "avaliacaomateriasdialog.h"
 #include "forumdialog.h"
 #include "agendaacademicadialog.h"
 #include "duvidasdialog.h"
-#include "grupoestudodialog.h"  // ✅ NOVO: Sistema de Grupos de Estudo
+#include "grupoestudodialog.h"  // Sistema de Grupos de Estudo
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -19,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("EducaUTFPR - Home");
     hide();
+
+    ui->perfil->installEventFilter(this);
 }
 
 // DESTRUTOR - Libera memória
@@ -49,10 +49,7 @@ void MainWindow::on_duvidasButton_clicked()
     dialog.exec();
 }
 
-// ============================================================================
-// SLOT: Botão Grupos de Estudo (ATUALIZADO)
-// Abre o sistema completo de grupos de estudo com chat
-// ============================================================================
+// SLOT: Botão Grupos de Estudo
 void MainWindow::on_grupoButton_clicked()
 {
     GrupoEstudoDialog dialog(this, loggedInUsername);
@@ -72,4 +69,30 @@ void MainWindow::on_sairButton_clicked()
 {
     QMessageBox::information(this, "Sair", "Saindo do sistema, até logo....");
     QApplication::quit();
+}
+
+// SLOT: Botão Ranking de Dificuldade das Matérias
+void MainWindow::on_avaliacaoButton_clicked()
+{
+    AvaliacaoMateriasDialog dialog(this, loggedInUsername);
+    dialog.exec();
+}
+
+// SLOT: Label Perfil (clicável)
+void MainWindow::on_perfil_clicked()
+{
+    PerfilDialog dialog(this, loggedInUsername);
+    dialog.exec();
+}
+
+// EVENT FILTER - Captura eventos de clique no label de perfil
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        if (obj == ui->perfil) {
+            on_perfil_clicked();
+            return true;
+        }
+    }
+    return QMainWindow::eventFilter(obj, event);
 }
