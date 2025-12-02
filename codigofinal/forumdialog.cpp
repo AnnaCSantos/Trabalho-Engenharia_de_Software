@@ -36,7 +36,6 @@ ForumDialog::ForumDialog(QWidget *parent, const QString& username)
 
     setupDatabase();
 
-    // Cria apenas as tabelas de curtidas (Duvidas e Disciplinas já existem no banco)
     criarTabelasDeCurtidas();
 
     layoutPrincipal = new QVBoxLayout(ui->containerBotoes);
@@ -412,8 +411,6 @@ QFrame* ForumDialog::criarCardDuvida(int idDuvida, const QString& titulo, const 
 
 void ForumDialog::onDuvidaClicked(int idDuvida)
 {
-    // Usa ForumPostsDialog mas ele precisará ser adaptado para ler de 'Duvidas' também
-    // Se o seu ForumPostsDialog já estiver adaptado (como fizemos no passo anterior), vai funcionar.
     ForumPostsDialog *detalhes = new ForumPostsDialog(this, idDuvida, loggedInUsername);
     detalhes->exec();
     delete detalhes;
