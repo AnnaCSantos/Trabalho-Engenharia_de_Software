@@ -1,5 +1,13 @@
 # Trabalho-Engenharia_de_Software
 
+Todos os códigos e arquivos do projeto estão na pasta "Codigo Final", la se encontra o código revisado e funcional, na versão final do projeto da disciplina.
+
+Link dos Slides: https://www.canva.com/design/DAG6XvRoBYY/4lnLYOUzjcbEJlK52y5lbw/edit?utm_content=DAG6XvRoBYY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
+O vídeo se encontra aqui no git, entitulado "Video funcionamento".
+
+Divisão de responsabilidades ==========================================================
+
 Na aula do dia 11/11, como sugerido pelo professor, fizemos uma separação do que precisa ser feito para a entrega final e atribuimos as responsabilidades a cada integrante da equipe
 
 Semana 1:
